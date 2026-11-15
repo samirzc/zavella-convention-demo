@@ -1,0 +1,2259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#FF5A1F">
+<title>One Promise · NASCAC XIV 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   THEME — per-event palette & fonts. Edit these CSS variables only.
+   ===================================================================== */
+:root{
+  /* page + text */
+  --bg: #FFF6EE;            /* page background (warm off-white) */
+  --ink: #0E1B3D;           /* body text (navy) */
+  --ink-2: #34406A;         /* secondary text (dark slate, never mid-grey) */
+  /* brand */
+  --brand: #FF5A1F;         /* primary accent: sunset orange */
+  --brand-2: #1F5BFF;       /* secondary accent: electric blue */
+  --brand-3: #FFB400;       /* highlight: gold */
+  --hot: #E3165B;           /* energy accent: magenta-red */
+  /* hero gradient */
+  --hero-a: #0A1846; --hero-b: #1F5BFF; --hero-c: #FF5A1F;
+  /* update badges */
+  --b-ann: #1F5BFF; --b-room: #C2410C; --b-urgent: #D0103A;
+  /* fonts (also update the Google Fonts <link> in <head>) */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  /* ---- structural tokens (rarely need changing) ---- */
+  --glass: rgba(255,255,255,.68);
+  --glass-strong: rgba(255,255,255,.84);
+  --glass-border: rgba(255,255,255,.8);
+  --line: rgba(14,27,61,.12);
+  --shadow: 0 12px 32px -14px rgba(14,27,61,.28);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --pad: 1.1rem;
+}
+
+/* ===== base ===== */
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (max-width:700px){html{font-size:20px}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{margin:0;line-height:1.15;color:var(--ink)}
+p{margin:0}
+a{color:var(--brand-2);font-weight:600}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brand-2);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ===== decorative background (fixed, persists across tabs) ===== */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:var(--bg)}
+.bg::before{content:"";position:absolute;inset:-20%;background:
+  radial-gradient(40% 35% at 88% 8%, color-mix(in srgb,var(--brand) 38%,transparent), transparent 70%),
+  radial-gradient(38% 38% at 4% 38%, color-mix(in srgb,var(--brand-2) 26%,transparent), transparent 70%),
+  radial-gradient(40% 32% at 70% 92%, color-mix(in srgb,var(--brand-3) 34%,transparent), transparent 70%),
+  radial-gradient(30% 30% at 30% 100%, color-mix(in srgb,var(--hot) 16%,transparent), transparent 70%)}
+.bg svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:26vh;min-height:140px;opacity:.07;fill:var(--ink)}
+
+/* ===== glass ===== */
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--glass-border);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+/* ===== header / nav ===== */
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.brandrow{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:.6rem;padding:.6rem var(--pad) .2rem}
+.brandrow .logo{width:2rem;height:2rem;color:var(--brand)}
+.brandtxt{display:flex;flex-direction:column;line-height:1.05;min-width:0;flex:0 1 auto}
+.brandtxt b{font-family:var(--font-display);font-weight:800;font-style:italic;font-size:1.15rem;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.brandtxt span{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brandrow .spacer{flex:1}
+.clockpill{display:inline-flex;align-items:center;gap:.35rem;font-size:.66rem;font-weight:800;letter-spacing:.04em;padding:.32rem .6rem;border-radius:999px;background:var(--ink);color:#fff;white-space:nowrap}
+.clockpill.live{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.clockpill i{width:.45rem;height:.45rem;border-radius:50%;background:var(--brand-3);display:inline-block}
+.clockpill.live i{background:#16a34a}
+.iconbtn{width:2rem;height:2rem;display:grid;place-items:center;border-radius:50%;color:var(--ink)}
+.iconbtn:hover{background:rgba(14,27,61,.06)}
+.iconbtn svg{width:1.1rem;height:1.1rem}
+.iconbtn.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.tabs{display:flex;gap:1.2rem;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:0 var(--pad);max-width:1080px;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;padding:.55rem 0 .5rem;font-size:.8rem;font-weight:700;color:var(--ink-2);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button.active{color:var(--ink);border-bottom-color:var(--brand)}
+.tabs button .count{display:inline-block;min-width:1.1rem;margin-left:.25rem;padding:0 .3rem;border-radius:999px;background:var(--brand);color:#fff;font-size:.62rem;line-height:1.1rem;text-align:center}
+
+/* demo clock menu */
+.clockmenu{position:fixed;z-index:60;top:3.2rem;right:.75rem;width:min(18rem,calc(100vw - 1.5rem));padding:.5rem;background:var(--glass-strong)}
+.clockmenu[hidden]{display:none}
+.clockmenu h4{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding:.35rem .55rem}
+.clockmenu button{display:flex;width:100%;justify-content:space-between;gap:.5rem;padding:.55rem .6rem;border-radius:10px;font-size:.78rem;font-weight:600;text-align:left}
+.clockmenu button:hover{background:rgba(14,27,61,.06)}
+.clockmenu button.on{background:var(--ink);color:#fff}
+.clockmenu small{font-size:.66rem;opacity:.8;font-weight:500}
+
+/* ===== layout ===== */
+main{max-width:1080px;margin:0 auto;padding:1rem var(--pad) 3rem}
+.view{display:none;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stack{display:grid;gap:1rem;grid-template-columns:minmax(0,1fr)}
+.stack>*,.grid2>*{min-width:0}
+.grid2{display:grid;gap:1rem;grid-template-columns:minmax(0,1fr)}
+@media (min-width:860px){.grid2{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
+.card{padding:var(--pad)}
+.eyebrow{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.h-sec{font-family:var(--font-display);font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.7rem;letter-spacing:.01em;margin:.3rem 0 .9rem}
+.h-card{font-size:1rem;font-weight:800;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;justify-content:space-between}
+.muted{color:var(--ink-2)}
+.small{font-size:.8rem}
+.linkbtn{font-size:.78rem;font-weight:800;color:var(--brand-2);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.6rem 1rem;border-radius:12px;background:var(--ink);color:#fff;font-weight:800;font-size:.82rem;text-decoration:none}
+.btn.alt{background:var(--brand);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.search{width:100%;padding:.7rem .9rem .7rem 2.4rem;border-radius:14px;border:1.5px solid var(--line);background:var(--glass-strong) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232D3A5E' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat .8rem center/1rem;font-size:.9rem;margin-bottom:1rem}
+.search:focus{outline:none;border-color:var(--brand-2)}
+.empty{text-align:center;padding:2rem 1rem}
+.empty p{margin:.4rem 0 1rem}
+
+/* ===== hero ===== */
+.hero{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 6px);padding:1.4rem var(--pad) 1.2rem;color:#fff;background:
+  radial-gradient(70% 90% at 100% 0%, color-mix(in srgb,var(--hero-c) 90%,transparent), transparent 60%),
+  radial-gradient(60% 80% at 0% 100%, color-mix(in srgb,var(--hero-b) 85%,transparent), transparent 65%),
+  linear-gradient(160deg,var(--hero-a),color-mix(in srgb,var(--hero-a) 70%,var(--hero-b)));box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;inset:auto -10% -30% 40%;height:70%;background:radial-gradient(closest-side,color-mix(in srgb,var(--brand-3) 45%,transparent),transparent);opacity:.55;pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.hero .logo{width:3.4rem;height:3.4rem;color:#fff;flex:0 0 auto}
+.hero .kicker{font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-3)}
+.hero h1{font-family:var(--font-display);font-weight:800;font-style:italic;text-transform:uppercase;color:#fff;font-size:clamp(2.6rem,11vw,4.6rem);line-height:.9;letter-spacing:.005em;text-shadow:0 4px 24px rgba(0,0,0,.25)}
+.hero .sub{font-family:var(--font-display);font-weight:700;font-style:italic;text-transform:uppercase;font-size:1.15rem;letter-spacing:.03em;margin-top:.3rem}
+.hero .sub em{font-style:inherit;color:var(--brand-3)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:.35rem 1rem;margin-top:.8rem;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.92)}
+.hero .meta span{display:inline-flex;align-items:center;gap:.35rem}
+.hero .meta svg{width:.95rem;height:.95rem;flex:0 0 auto}
+.cd{margin-top:1.1rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.22)}
+.cd-label{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-bottom:.5rem}
+.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+@media (max-width:480px){.cd-grid{grid-template-columns:repeat(2,1fr)}}
+.cd-box{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:.55rem .4rem;text-align:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.cd-box b{display:block;font-family:var(--font-display);font-weight:800;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums}
+.cd-box small{font-size:.6rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.cd-msg{font-family:var(--font-display);font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.5rem}
+
+/* ===== now / next ===== */
+.nn-sec+.nn-sec{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.nn-head{display:flex;align-items:center;gap:.45rem;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem}
+.pulse{width:.55rem;height:.55rem;border-radius:50%;background:#e11d48;box-shadow:0 0 0 0 rgba(225,29,72,.6);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 .5rem rgba(225,29,72,0)}100%{box-shadow:0 0 0 0 rgba(225,29,72,0)}}
+.mini{display:flex;gap:.7rem;align-items:flex-start;width:100%;text-align:left;padding:.5rem .55rem;margin:0 -.55rem;border-radius:12px}
+.mini:hover{background:rgba(14,27,61,.05)}
+.mini .bar{width:.3rem;align-self:stretch;border-radius:4px;background:var(--tc);flex:0 0 auto}
+.mini b{display:block;font-size:.9rem;line-height:1.25}
+.mini small{display:block;font-size:.72rem;color:var(--ink-2);font-weight:600;margin-top:.1rem}
+.mini .when{font-weight:800;color:var(--brand-2)}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.68rem;font-weight:700;padding:.22rem .55rem;border-radius:999px;background:rgba(14,27,61,.06);color:var(--ink)}
+.chip i{width:.45rem;height:.45rem;border-radius:50%;background:var(--tc,var(--brand))}
+
+/* ===== weather ===== */
+.wx{display:flex;align-items:center;gap:1rem}
+.wx-icon{font-size:2.4rem;line-height:1}
+.wx-temp{font-family:var(--font-display);font-weight:800;font-size:2.6rem;line-height:1}
+.wx-days{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.9rem}
+.wx-day{text-align:center;padding:.5rem .3rem;border-radius:12px;background:rgba(14,27,61,.045);font-size:.72rem;font-weight:700}
+.wx-day span{display:block;font-size:1.2rem;margin:.1rem 0}
+
+/* ===== feature strip ===== */
+.features{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(14rem,78%);gap:.8rem;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:.2rem .1rem .6rem;scroll-snap-type:x mandatory}
+.features::-webkit-scrollbar{display:none}
+@media (min-width:860px){.features{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);overflow:visible}}
+.feat{scroll-snap-align:start;text-align:left;padding:1rem;position:relative;overflow:hidden;border-top:4px solid var(--tc)}
+.feat .tag{font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.feat h3{font-family:var(--font-display);font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.35rem;margin:.2rem 0 .3rem}
+.feat p{font-size:.78rem;color:var(--ink-2)}
+.feat .price{position:absolute;top:.8rem;right:.9rem;font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--tc)}
+
+/* ===== updates ===== */
+.upd{display:flex;gap:.8rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.upd:last-child{border-bottom:0}
+.upd h4{font-size:.92rem;margin:.25rem 0 .2rem}
+.upd p{font-size:.82rem}
+.upd time{font-size:.68rem;font-weight:700;color:var(--ink-2)}
+.badge{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.18rem .5rem;border-radius:6px;color:#fff;background:var(--b-ann)}
+.badge.room{background:var(--b-room)}
+.badge.urgent{background:var(--b-urgent)}
+.upd.urgent{background:color-mix(in srgb,var(--b-urgent) 7%,transparent);margin:0 calc(var(--pad) * -1);padding-left:var(--pad);padding-right:var(--pad)}
+.srcnote{font-size:.68rem;color:var(--ink-2);margin-top:.8rem;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.dot{width:.5rem;height:.5rem;border-radius:50%;background:#16a34a;display:inline-block}
+.dot.off{background:var(--brand-3)}
+
+/* ===== schedule ===== */
+.subtabs{display:flex;gap:1.1rem;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;border-bottom:1px solid var(--line);margin-bottom:.8rem}
+.subtabs::-webkit-scrollbar{display:none}
+.subtabs button{flex:0 0 auto;padding:.5rem 0;font-weight:700;font-size:.82rem;color:var(--ink-2);border-bottom:3px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.subtabs button.active{color:var(--ink);border-bottom-color:var(--tc,var(--brand))}
+.subtabs button small{font-weight:600;opacity:.75;font-size:.7rem}
+.subtabs.tracks button i{width:.5rem;height:.5rem;border-radius:50%;background:var(--tc)}
+.subtabs.days button{font-size:.9rem}
+.timehead{font-family:var(--font-display);font-weight:800;font-size:1.05rem;letter-spacing:.04em;margin:1.1rem 0 .45rem;color:var(--ink-2);display:flex;align-items:center;gap:.5rem}
+.timehead::after{content:"";flex:1;height:1px;background:var(--line)}
+.sess{position:relative;margin-bottom:.6rem;border-left:5px solid var(--tc);overflow:hidden;transition:box-shadow .2s}
+.sess.past{opacity:.62}
+.sess.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,60%{box-shadow:0 0 0 4px color-mix(in srgb,var(--tc) 55%,transparent),var(--shadow)}}
+.sess-main{display:flex;gap:.8rem;width:100%;text-align:left;padding:.8rem 3rem .8rem .85rem}
+.sess-time{flex:0 0 4.4rem;font-size:.8rem;font-weight:800;line-height:1.25}
+.sess-time span{display:block;font-weight:600;color:var(--ink-2);font-size:.7rem}
+.sess-body{min-width:0;flex:1}
+.sess-track{font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:.2rem .5rem;align-items:center}
+.sess-track .tn{color:var(--ink)}
+.sess-track .tn::before{content:"";display:inline-block;width:.5rem;height:.5rem;border-radius:50%;background:var(--tc);margin-right:.3rem;vertical-align:.02rem}
+.sess h3{font-size:.98rem;font-weight:800;margin:.2rem 0 .15rem;line-height:1.25}
+.sess-spk{font-size:.76rem;font-weight:600;color:var(--ink-2)}
+.livetag{font-size:.58rem;font-weight:800;letter-spacing:.1em;color:#fff;background:#e11d48;border-radius:5px;padding:.08rem .35rem}
+.star{position:absolute;top:.55rem;right:.5rem;width:2.3rem;height:2.3rem;display:grid;place-items:center;border-radius:50%;color:var(--ink-2)}
+.star svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.star[aria-pressed="true"]{color:var(--brand-3)}
+.star[aria-pressed="true"] svg{fill:currentColor;stroke:color-mix(in srgb,var(--brand-3) 70%,#7a4a00)}
+.star:hover{background:rgba(14,27,61,.06)}
+.sess-more{display:none;padding:0 .95rem .95rem 6.05rem;font-size:.84rem}
+.subtabs.days .sl{display:none}
+@media (max-width:560px){
+  .sess-main{flex-direction:column;gap:.1rem;padding:.75rem 2.9rem .75rem .85rem}
+  .sess-time{flex:none;font-size:.74rem}
+  .sess-time span{display:inline;font-size:.74rem;font-weight:800;color:var(--ink-2);margin-left:.2rem}
+  .sess-more{padding-left:.95rem}
+  .subtabs.days .ll{display:none}
+  .subtabs.days .sl{display:inline}
+  .brandtxt span{display:none}
+  .clockpill .lbl{display:none}
+  .brandtxt b{font-size:.95rem}
+  .brandrow .logo{width:1.6rem;height:1.6rem}
+  .clockpill{font-size:.6rem;padding:.3rem .5rem}
+}
+.sess.open .sess-more{display:block}
+.sess-more p{margin-bottom:.6rem}
+.spkbtns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .5rem}
+.spkbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .6rem .25rem .25rem;border-radius:999px;background:rgba(14,27,61,.06);font-size:.74rem;font-weight:700}
+.spkbtn .av{width:1.5rem;height:1.5rem;font-size:.55rem}
+.tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tagx{font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem;border-radius:6px;border:1.5px solid var(--line);color:var(--ink-2)}
+
+/* ===== agenda ===== */
+.warn{padding:.8rem var(--pad);border-radius:var(--radius-sm);background:color-mix(in srgb,var(--b-urgent) 9%,white);border:1.5px solid color-mix(in srgb,var(--b-urgent) 35%,transparent);font-size:.82rem;margin-bottom:1rem}
+.warn b{color:var(--b-urgent)}
+.warn ul{margin:.35rem 0 0;padding-left:1.1rem}
+.sess.conflict{border-left-color:var(--b-urgent)}
+.conflicttag{font-size:.58rem;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--b-urgent);border-radius:5px;padding:.08rem .35rem}
+.note{font-size:.74rem;color:var(--ink-2);margin-top:.6rem}
+
+/* ===== speakers ===== */
+.spk-grid{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr))}
+.spk{padding:1rem .8rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.spk:hover{transform:translateY(-2px)}
+.spk b{font-size:.9rem;margin-top:.45rem}
+.spk small{font-size:.7rem;color:var(--ink-2);font-weight:600;line-height:1.3}
+.spk .role{font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-2)}
+.av{width:4rem;height:4rem;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:1.4rem;color:#fff;background:linear-gradient(140deg,var(--brand),var(--hot));object-fit:cover;flex:0 0 auto;overflow:hidden}
+.av.c1{background:linear-gradient(140deg,var(--brand-2),#6d28d9)}
+.av.c2{background:linear-gradient(140deg,var(--brand-3),var(--brand))}
+.av.c3{background:linear-gradient(140deg,#0ea5a4,var(--brand-2))}
+.spk-group{margin:1.2rem 0 .6rem}
+
+/* ===== vendors ===== */
+.tier{margin-bottom:1.3rem}
+.tier-h{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.tier-h h3{font-family:var(--font-display);font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.25rem}
+.tier-h::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--brand),transparent)}
+.ven-grid{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr))}
+.ven{padding:.9rem;display:flex;gap:.8rem}
+.ven .lg{width:3rem;height:3rem;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:#fff;background:linear-gradient(140deg,var(--brand-2),var(--brand));overflow:hidden}
+.ven .lg img{width:100%;height:100%;object-fit:contain;background:#fff}
+.ven b{font-size:.9rem;display:block}
+.ven .cat{font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.ven p{font-size:.78rem;margin-top:.3rem}
+.booth{display:inline-block;margin-top:.4rem;font-size:.68rem;font-weight:800;padding:.15rem .5rem;border-radius:6px;background:var(--ink);color:#fff}
+
+/* ===== venue & info ===== */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;font-size:.84rem}
+.kv dt{font-weight:800}
+.kv dd{margin:0}
+.rooms{list-style:none;margin:0;padding:0}
+.rooms li{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--line);font-size:.84rem}
+.rooms li:last-child{border-bottom:0}
+.rooms li b{display:block}
+.rooms li small{color:var(--ink-2);font-size:.72rem}
+.rooms .lvl{font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
+.floorplan{border:2px dashed color-mix(in srgb,var(--ink) 25%,transparent);border-radius:var(--radius-sm);min-height:11rem;display:grid;place-items:center;text-align:center;padding:1rem;background:rgba(255,255,255,.45);font-size:.8rem;color:var(--ink-2)}
+.floorplan img{width:100%;height:auto;border-radius:10px}
+.wifi{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.7rem .8rem;border-radius:12px;background:rgba(14,27,61,.05);margin-top:.4rem}
+.wifi code{font-size:.88rem;font-weight:800;font-family:ui-monospace,Menlo,monospace}
+.copybtn{font-size:.7rem;font-weight:800;padding:.35rem .6rem;border-radius:8px;background:var(--ink);color:#fff}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:last-child{border-bottom:0}
+.faq summary{list-style:none;cursor:pointer;padding:.8rem 1.6rem .8rem 0;font-weight:800;font-size:.9rem;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:.2rem;top:.65rem;font-size:1.2rem;color:var(--brand)}
+.faq details[open] summary::after{content:"–"}
+.faq .ans{padding:0 0 .9rem;font-size:.84rem}
+.contacts{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))}
+.contact{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.7rem .8rem;border-radius:12px;background:rgba(14,27,61,.045);text-decoration:none;color:var(--ink)}
+.contact b{display:block;font-size:.86rem}
+.contact small{font-size:.7rem;color:var(--ink-2);font-weight:600}
+.contact span{font-size:.74rem;font-weight:800;color:var(--brand-2);white-space:nowrap;flex:0 0 auto}
+.placeholder{background:color-mix(in srgb,var(--brand-3) 30%,transparent);border-radius:4px;padding:0 .2rem;font-weight:700}
+
+/* ===== bottom sheet ===== */
+.sheet{position:fixed;inset:0;z-index:80;display:none}
+.sheet.open{display:block}
+.sheet .scrim{position:absolute;inset:0;background:rgba(14,27,61,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fade .2s}
+.sheet .panel{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(40rem,100%);max-height:88vh;overflow-y:auto;overscroll-behavior:contain;border-radius:22px 22px 0 0;padding:1.2rem var(--pad) calc(1.4rem + env(safe-area-inset-bottom));background:var(--glass-strong);animation:up .25s ease}
+@media (min-width:700px){.sheet .panel{bottom:auto;top:50%;transform:translate(-50%,-50%);border-radius:22px}}
+@keyframes up{from{transform:translate(-50%,40px);opacity:0}}
+.sheet .close{position:absolute;top:.7rem;right:.7rem}
+.sheet .who{display:flex;gap:1rem;align-items:center;margin-bottom:1rem;padding-right:2rem}
+.sheet .who .av{width:4.6rem;height:4.6rem;font-size:1.6rem}
+.sheet h2{font-size:1.25rem}
+.sheet .bio{font-size:.88rem;margin-bottom:1rem}
+
+/* ===== toast / footer ===== */
+.toast{visibility:hidden;position:fixed;left:50%;bottom:calc(1rem + env(safe-area-inset-bottom));transform:translate(-50%,150%);z-index:90;background:var(--ink);color:#fff;padding:.6rem 1rem;border-radius:12px;font-size:.8rem;font-weight:700;transition:transform .25s;box-shadow:var(--shadow);max-width:calc(100vw - 2rem)}
+.toast.show{visibility:visible;transform:translate(-50%,0)}
+footer{max-width:1080px;margin:0 auto;padding:0 var(--pad) 2.5rem;font-size:.7rem;color:var(--ink-2);text-align:center}
+footer p+p{margin-top:.3rem}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0 200V150h40v-20h30v-35h25v35h20v-55h35v75h30V90h18V60h14v30h18v70h40v-40h30v50h25V70h12V40h8V20h6v20h8v30h12v110h30v-60h40v-30h22v90h26V60h10V30h20v30h10v140h36v-80h28v-40h34v120h24V90h18V50h30v40h18v110h30v-70h40v50h26V80h30v20h20v100h30V60h8V10h4v50h8v140h34v-90h26v-30h30v120h28V100h22V70h26v130h40v-60h24v-30h36v90h30V120h40v80z"/></svg>
+</div>
+
+<header class="topbar">
+  <div class="brandrow">
+    <span class="logo" id="brandLogo" aria-hidden="true"></span>
+    <div class="brandtxt"><b id="brandName"></b><span id="brandSub"></span></div>
+    <div class="spacer"></div>
+    <button class="clockpill" id="clockPill" data-act="clockmenu" aria-haspopup="true" aria-expanded="false"></button>
+    <button class="iconbtn" id="refreshBtn" data-act="refresh" aria-label="Refresh live content">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+    </button>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Sections">
+    <button data-act="tab" data-tab="home" class="active">Home</button>
+    <button data-act="tab" data-tab="schedule">Schedule</button>
+    <button data-act="tab" data-tab="agenda">My Agenda<span class="count" id="agendaCount" hidden></span></button>
+    <button data-act="tab" data-tab="speakers">Speakers</button>
+    <button data-act="tab" data-tab="vendors" id="vendorsTabBtn">Exhibitors</button>
+    <button data-act="tab" data-tab="venue">Venue</button>
+    <button data-act="tab" data-tab="updates">Updates<span class="count" id="updCount" hidden></span></button>
+    <button data-act="tab" data-tab="info">Info</button>
+  </nav>
+</header>
+
+<div class="clockmenu glass" id="clockMenu" hidden role="menu"></div>
+
+<main>
+  <!-- ================= HOME ================= -->
+  <section class="view active" id="view-home">
+    <div class="stack">
+      <div class="hero" id="hero"></div>
+      <div class="grid2">
+        <div class="card glass" id="nowNext"></div>
+        <div class="stack">
+          <div class="card glass" id="weather"></div>
+          <div class="card glass" id="homeUpdates"></div>
+        </div>
+      </div>
+      <div id="featuresWrap">
+        <div class="eyebrow" id="featuresLabel">Don't miss</div>
+        <div class="features" id="features" style="margin-top:.5rem"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCHEDULE ================= -->
+  <section class="view" id="view-schedule">
+    <h2 class="h-sec">Schedule</h2>
+    <div class="subtabs days" id="dayTabs" role="tablist" aria-label="Days"></div>
+    <div class="subtabs tracks" id="trackTabs" role="tablist" aria-label="Tracks"></div>
+    <div id="sessionList"></div>
+  </section>
+
+  <!-- ================= AGENDA ================= -->
+  <section class="view" id="view-agenda">
+    <h2 class="h-sec">My Agenda</h2>
+    <div id="agendaList"></div>
+  </section>
+
+  <!-- ================= SPEAKERS ================= -->
+  <section class="view" id="view-speakers">
+    <h2 class="h-sec">Speakers</h2>
+    <input class="search" id="spkSearch" type="search" placeholder="Search speakers, cities, topics" aria-label="Search speakers">
+    <div id="spkList"></div>
+  </section>
+
+  <!-- ================= EXHIBITORS / VENDORS ================= -->
+  <section class="view" id="view-vendors">
+    <h2 class="h-sec" id="vendorsTitle">Exhibitors &amp; Sponsors</h2>
+    <p class="muted small" id="vendorsIntro" style="margin:-.4rem 0 .9rem"></p>
+    <input class="search" id="venSearch" type="search" placeholder="Search by name, category, or booth" aria-label="Search exhibitors">
+    <div id="venList"></div>
+  </section>
+
+  <!-- ================= VENUE ================= -->
+  <section class="view" id="view-venue">
+    <h2 class="h-sec">Venue</h2>
+    <div id="venueWrap" class="grid2"></div>
+  </section>
+
+  <!-- ================= UPDATES ================= -->
+  <section class="view" id="view-updates">
+    <h2 class="h-sec">Updates</h2>
+    <div class="card glass" id="updList"></div>
+  </section>
+
+  <!-- ================= INFO ================= -->
+  <section class="view" id="view-info">
+    <h2 class="h-sec">Info &amp; FAQ</h2>
+    <div class="stack" id="infoWrap"></div>
+  </section>
+</main>
+
+<footer id="footer"></footer>
+
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="scrim" data-act="closesheet"></div>
+  <div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <button class="iconbtn close" data-act="closesheet" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   CONFIG — everything event-specific lives here and in the THEME block.
+   ===================================================================== */
+/* ---------- EVENT ---------- */
+const EVENT = {
+  id: 'nascac-xiv-2026',                 // storage key prefix (unique per event)
+  name: 'One Promise',                    // hero headline
+  shortName: 'NASCAC XIV',                // header + small labels
+  brandSub: 'NA South City Area Convention',
+  kicker: 'NA South City Area Convention',
+  subtitle: 'NASCAC XIV · 2026',
+  subtitleHTML: 'NASCAC <em>XIV</em> · Chicago 2026',
+  datesLabel: 'September 3–6, 2026',
+  startISO: '2026-09-03T15:00:00-05:00',  // countdown target (registration opens)
+  endISO: '2026-09-06T16:00:00-05:00',
+  timeZone: 'America/Chicago',
+  utcOffset: '-05:00',                    // offset during the event (CDT)
+  dayRolloverHour: 6,                     // sessions starting before 6 AM belong to the previous day
+  venueName: "Hilton Rosemont O'Hare",
+  cityLabel: 'Rosemont, IL',
+  weatherLabel: 'Rosemont',
+  lat: 41.9853, lon: -87.8603,
+  tempUnit: 'fahrenheit', windUnit: 'mph',
+  logo: 'data:image/png;base64,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',                        // data: URI or image URL; white/single-color mark (rendered as a tintable mask). '' = monogram
+  countdownTrack: 'main',                 // during the event, count down to the next session on this track
+  liveMessage: 'Welcome home',
+  afterMessage: 'Keep coming back',
+  refreshSeconds: 120,
+  days: [
+    { date: '2026-09-03', label: 'Thursday', short: 'Sep 3' },
+    { date: '2026-09-04', label: 'Friday',   short: 'Sep 4' },
+    { date: '2026-09-05', label: 'Saturday', short: 'Sep 5' },
+    { date: '2026-09-06', label: 'Sunday',   short: 'Sep 6' }
+  ],
+  tracks: [                               // id is what the Sessions sheet 'track' column uses (name also works)
+    { id: 'main',     name: 'Main Meetings',    color: '#1F5BFF' },
+    { id: 'workshop', name: 'Workshops',        color: '#FF5A1F' },
+    { id: 'marathon', name: 'Marathon & Quiet', color: '#7C3AED' },
+    { id: 'social',   name: 'Socials & Events', color: '#E3165B' }
+  ],
+  speakerGroups: [ { label: 'Main Speakers', match: 'Speaker' }, { label: 'Workshop Leaders', match: 'Workshop' } ],
+  highlights: [
+    { sessionId: 'sa05', title: 'Chicago Bus Tour', price: '$50', blurb: 'Mag Mile, Navy Pier, Buckingham Fountain and a special stop at the Obama Presidential Center.' },
+    { sessionId: 'sa18', title: 'Saturday Night Main', blurb: 'The main event in the Grand Ballroom. Doors at 6:30.' },
+    { sessionId: 'sa23', title: 'Comedy Show', price: '$15', blurb: 'Clean comedy, late night, International room.' },
+    { sessionId: 'su02', title: 'Thank You Party', price: 'FREE', blurb: 'Sunday 1–4 PM. Free and open to all.' }
+  ],
+
+  /* Exhibitors tab: renamed for an NA convention (no outside sponsors) */
+  vendorsTabLabel: 'Merch & Vendors',
+  vendorsTitle: 'Merch & Vendors',
+  vendorsIntroHTML: 'Convention merch and ticket sales keep NASCAC self-supporting. Vendor Row is in the Registration Foyer.',
+  tierOrder: ['Convention Merch', 'Literature', 'Vendors', 'Hospitality'],
+  vendorsFooterHTML: '<b>Want a vendor table next year?</b> Contact the F&amp;E Committee (see Info → Contacts).',
+
+  venue: {
+    address: '5550 N. River Road\nRosemont, IL 60018',
+    mapsQuery: "Hilton Rosemont Chicago O'Hare, 5550 N River Rd, Rosemont, IL 60018",
+    phone: '(847) 678-4488',
+    noteHTML: '<b>Host hotel sold out.</b> Overflow: DoubleTree by Hilton Rosemont, nearby.',
+    rooms: [
+      { name: 'Grand Ballroom', use: 'Main meetings, Women’s Rap, dances, closing', level: 'Ballroom' },
+      { name: 'International', use: 'Bingo, Fashion Show, Men’s Rap, Comedy Show', level: 'Event room' },
+      { name: 'Armstrong', use: 'Workshops · Midnight speakers', level: 'Meeting room' },
+      { name: 'Crossfield', use: 'Workshops · Pajama marathon', level: 'Meeting room' },
+      { name: 'Rickenbacker', use: 'Workshops', level: 'Meeting room' },
+      { name: 'Garros', use: 'Meditation / Quiet Room · Marathon', level: 'Meeting room' },
+      { name: 'Main Entrance', use: 'Bus Tour boarding (Sat 9:30 AM)', level: 'Lobby' },
+      { name: 'Registration Foyer', use: 'Registration, merch, literature, Vendor Row', level: 'Lobby' }
+    ],
+    floorPlanUrl: '',                     // paste an image URL of the hotel map
+    wifi: { network: 'NASCAC-XIV', password: 'OnePromise2026' },
+    regLocation: 'Registration Foyer',
+    regHours: [ ['Thursday', '3:00 PM – 10:00 PM'], ['Friday', '8:00 AM – 10:00 PM'], ['Saturday', '8:00 AM – 10:00 PM'], ['Sunday', '8:00 AM – 11:00 AM'] ],
+    parking: [
+      'Self and valet parking at the hotel. [Parking rates: confirm with the Hotel Committee]',
+      'Transit: CTA Blue Line to Rosemont station, then a short ride to the hotel.',
+      'Flying in? The hotel is just outside O’Hare. [Airport shuttle details]'
+    ],
+    hotelHTML: 'Group code <b>NAS</b> · Reservations <a href="tel:8476784488">847-678-4488</a><br>The host block is sold out. Try the <b>DoubleTree by Hilton Rosemont</b> nearby.'
+  },
+
+  info: {
+    faq: [
+      { q: 'Do I need to register?', a: 'All NA meetings are open to everyone. Registration supports the convention and gets you the badge you need for the dances and program book. Register online at <a href="https://southcityna.org" target="_blank" rel="noopener">southcityna.org</a> or at the Registration desk.' },
+      { q: 'How do I pay for registration and tickets?', a: 'Online at southcityna.org, or through <span class="placeholder">[Cash App handle]</span> or <span class="placeholder">[Zelle email]</span>. Cash is accepted at the Registration desk.' },
+      { q: 'Protecting anonymity', a: 'Please don’t photograph or post other members without their permission, and never post full names or faces tied to NA. Speakers share by first name and last initial.' },
+      { q: 'Accessibility', a: 'All meeting rooms are on accessible routes with elevator access. Reserved seating is available at the front of the Grand Ballroom. Need an interpreter or other accommodation? Ask at Registration. <span class="placeholder">[ASL availability]</span>' },
+      { q: 'Convention guidelines', a: 'Treat everyone with respect. Harassment of any kind isn’t tolerated, and the committee may ask anyone disrupting the convention to leave. Follow hotel rules, keep hallways quiet after midnight, and no outside food at convention events.' },
+      { q: 'Lost & found', a: 'Turn in or claim items at the Registration desk. After the convention, contact the Registration Chair (see Contacts).' },
+      { q: 'Need help right now?', a: 'Find a trusted servant in a convention T-shirt, or head to Registration. For the Chicagoland NA helpline, visit <a href="https://chicagona.org/helpline/" target="_blank" rel="noopener">chicagona.org/helpline</a>.' }
+    ],
+    contacts: [
+      { name: 'Marcus T.',  role: 'Convention Chair',     phone: '(773) 555-0142' },
+      { name: 'Renee W.',   role: 'Convention Co-Chair',  phone: '(773) 555-0178' },
+      { name: 'Yvette L.',  role: 'Registration Chair',   phone: '(773) 555-0119' },
+      { name: 'Curtis B.',  role: 'Hotel Chair',          phone: '(312) 555-0163' },
+      { name: 'Gloria P.',  role: 'F&E Chair',            phone: '(312) 555-0127' },
+      { name: 'Tamika R.',  role: 'F&E Co-Chair',         phone: '(312) 555-0190' },
+      { name: 'South City NA', role: 'Convention website', url: 'https://southcityna.org', linkText: 'southcityna.org' }
+    ],
+    contactsNote: 'Demo contacts: names and numbers are fictional.'
+  },
+
+  footerHTML: '<p>NASCAC XIV · One Promise · Sept 3–6, 2026 · Hilton Rosemont O’Hare</p><p>Demo build: speaker names, contacts and some details are fictional. App by <span class="placeholder">[YOUR STUDIO NAME]</span> · <span class="placeholder">[contact]</span></p>'
+};
+
+/* ---------- GOOGLE SHEETS (published CSV links; '' = use fallback data) ---------- */
+const SHEETS = {
+  UPDATES:    '',   // e.g. https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=0&single=true&output=csv
+  SESSIONS:   '',
+  SPEAKERS:   '',
+  EXHIBITORS: ''
+};
+
+/* ---------- DEMO CLOCK ----------
+   Freezes "now" at a preset so Countdown / Happening Now / Up Next look live
+   in a pitch. The pill in the header switches presets. URL overrides:
+   ?demo (turn on) · ?demo=3 (preset #3) · ?live (real time). For a real
+   event set enabled:false and presets:[] to hide the pill. */
+const DEMO_CLOCK = {
+  enabled: true,
+  defaultPreset: 3,
+  presets: [
+    { label: '3 days to go',          iso: '2026-08-31T11:20:00-05:00' },
+    { label: 'Thursday · Opening night', iso: '2026-09-03T18:45:00-05:00' },
+    { label: 'Friday · Workshops',    iso: '2026-09-04T10:20:00-05:00' },
+    { label: 'Saturday · Bus Tour day', iso: '2026-09-05T11:15:00-05:00' },
+    { label: 'Saturday · Main meeting', iso: '2026-09-05T19:40:00-05:00' },
+    { label: 'Sunday · Closing',      iso: '2026-09-06T10:50:00-05:00' },
+    { label: 'After the convention',  iso: '2026-09-07T12:00:00-05:00' }
+  ]
+};
+
+/* =====================================================================
+   GOOGLE SHEETS SETUP (for the organizer)
+   ---------------------------------------------------------------------
+   1. Make one Google Sheet with four tabs: Updates, Sessions, Speakers,
+      Exhibitors. Row 1 = column headers exactly as below (any order):
+        Updates     type | title | message | timestamp
+                    (type = announcement / room change / urgent)
+        Sessions    id | day | start | end | track | room | title |
+                    speaker_ids | description | tags
+                    (day = 2026-09-03 · start/end = 7:00 PM or 19:00 ·
+                     speaker_ids & tags separated by commas or ; ·
+                     times before 6 AM belong to the night before, so a
+                     Friday 12:30 AM session is typed on the Friday row)
+        Speakers    id | name | title | organization | bio | photo_url
+        Exhibitors  name | tier | booth | category | description | url | logo_url
+   2. File → Share → Publish to web → pick a tab → Comma-separated values
+      → Publish. Paste each link into SHEETS above. Repeat per tab.
+   3. Auto-timestamp for Updates: Extensions → Apps Script → paste this,
+      Save. Then format column D as Format → Number → Date time.
+
+      function onEdit(e) {
+        var sh = e.range.getSheet();
+        if (sh.getName() !== 'Updates') return;   // tab name
+        var row = e.range.getRow();
+        if (row === 1) return;                    // header row
+        var TS_COL = 4;                           // D = timestamp
+        if (e.range.getColumn() === TS_COL) return;
+        var cell = sh.getRange(row, TS_COL);
+        if (!cell.getValue()) cell.setValue(new Date());
+      }
+
+   If a sheet is blank, unpublished, or offline, the app silently uses the
+   FALLBACK data below, so it always works.
+   ===================================================================== */
+
+/* =====================================================================
+   FALLBACK DATA — same columns as the sheets. Shown when a sheet is
+   missing or unreachable.
+   ===================================================================== */
+const FALLBACK = {
+  updates: [
+    {
+      "type": "announcement",
+      "title": "The Last Dance is today",
+      "message": "Pre-convention fundraiser 1–6 PM at 450 E. 78th St., Chicago. $5 advance tickets. NASCAC XIV registration and merch on sale, plus advance Comedy Show tickets ($15). No outside food.",
+      "timestamp": "2026-08-30T09:00:00-05:00"
+    },
+    {
+      "type": "urgent",
+      "title": "Host hotel is sold out",
+      "message": "The Hilton Rosemont O'Hare room block is full. Need a room? Try the nearby DoubleTree by Hilton Rosemont.",
+      "timestamp": "2026-08-31T11:20:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Registration is open",
+      "message": "Pick up badges and program books at the Registration desk. Registration opens at 3 PM today.",
+      "timestamp": "2026-09-03T14:30:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Fashion Show tonight",
+      "message": "Fashion Show at 9:30 PM in the International room, right after the Friday night main meeting.",
+      "timestamp": "2026-09-04T18:30:00-05:00"
+    },
+    {
+      "type": "room change",
+      "title": "Faith In The Midst Of The Storm → Crossfield",
+      "message": "Saturday's 10:00 AM workshop has moved from Rickenbacker to Crossfield.",
+      "timestamp": "2026-09-05T07:45:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Bus Tour boards at 9:30",
+      "message": "Chicago Bus Tour riders: meet at the Main Entrance by 9:30 AM. The bus leaves at 10:00 sharp. Have your ticket ready.",
+      "timestamp": "2026-09-05T09:05:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Lost & found: keys",
+      "message": "A set of keys on a blue keytag was turned in at Registration. Describe them to claim.",
+      "timestamp": "2026-09-05T10:40:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Comedy Show tickets still available",
+      "message": "A limited number of $15 Comedy Show tickets are at Registration. Show starts 10 PM in International.",
+      "timestamp": "2026-09-05T15:30:00-05:00"
+    },
+    {
+      "type": "room change",
+      "title": "Men's Rap: overflow seating",
+      "message": "Men's Rap is packed. Overflow seating is set up in the International foyer.",
+      "timestamp": "2026-09-05T15:10:00-05:00"
+    },
+    {
+      "type": "announcement",
+      "title": "Closing meeting + Thank You Party",
+      "message": "Closing meeting at 10 AM in the Grand Ballroom. Then the free Thank You Party 1–4 PM, open to all.",
+      "timestamp": "2026-09-06T08:30:00-05:00"
+    }
+  ],
+  sessions: [
+    {
+      "id": "th01",
+      "day": "2026-09-03",
+      "start": "5:00 PM",
+      "end": "6:00 PM",
+      "track": "workshop",
+      "room": "Grand Ballroom",
+      "title": "For The Newcomer",
+      "speaker_ids": "sp-tasha, sp-ramon, sp-keisha, sp-bill",
+      "description": "Four members share what the first days, weeks and months looked like, and what worked. If you're new, this one's for you. Sit up front.",
+      "tags": "newcomer-friendly"
+    },
+    {
+      "id": "th02",
+      "day": "2026-09-03",
+      "start": "7:00 PM",
+      "end": "9:00 PM",
+      "track": "main",
+      "room": "Grand Ballroom",
+      "title": "Opening Speaker Meeting",
+      "speaker_ids": "sp-denise",
+      "description": "NASCAC XIV opens with readings, a welcome from the convention committee, and our opening speaker.",
+      "tags": "main-meeting"
+    },
+    {
+      "id": "th03",
+      "day": "2026-09-03",
+      "start": "9:30 PM",
+      "end": "10:45 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "Our Dependence Has Shifted",
+      "speaker_ids": "sp-angela",
+      "description": "Panel-style workshop on “Our Dependence Has Shifted.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "th04",
+      "day": "2026-09-03",
+      "start": "9:30 PM",
+      "end": "10:45 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "We Begin To Change",
+      "speaker_ids": "sp-jerome",
+      "description": "Panel-style workshop on “We Begin To Change.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "th05",
+      "day": "2026-09-03",
+      "start": "10:00 PM",
+      "end": "1:00 AM",
+      "track": "social",
+      "room": "Grand Ballroom",
+      "title": "Opening Night Dance",
+      "speaker_ids": "",
+      "description": "DJ, dance floor, and fellowship to kick off the weekend. Registration badge required.",
+      "tags": "badge-required"
+    },
+    {
+      "id": "fr01",
+      "day": "2026-09-04",
+      "start": "8:00 AM",
+      "end": "12:00 AM",
+      "track": "marathon",
+      "room": "Garros",
+      "title": "Meditation / Quiet Room",
+      "speaker_ids": "",
+      "description": "A quiet space open all day for prayer, meditation, reading, and reflection. Please keep conversation outside.",
+      "tags": "ongoing"
+    },
+    {
+      "id": "fr02",
+      "day": "2026-09-04",
+      "start": "10:00 AM",
+      "end": "11:45 AM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Getting Out Of My Own Way",
+      "speaker_ids": "sp-monique",
+      "description": "Panel-style workshop on “Getting Out Of My Own Way.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr03",
+      "day": "2026-09-04",
+      "start": "10:00 AM",
+      "end": "11:45 AM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "My Recovery Is My Responsibility",
+      "speaker_ids": "sp-luis",
+      "description": "Panel-style workshop on “My Recovery Is My Responsibility.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr04",
+      "day": "2026-09-04",
+      "start": "10:00 AM",
+      "end": "11:45 AM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "They Showed Me How To Live",
+      "speaker_ids": "sp-patricia",
+      "description": "Panel-style workshop on “They Showed Me How To Live.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr05",
+      "day": "2026-09-04",
+      "start": "12:00 PM",
+      "end": "1:15 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Am I Really Seeking Recovery?",
+      "speaker_ids": "sp-terrence",
+      "description": "Panel-style workshop on “Am I Really Seeking Recovery?.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr06",
+      "day": "2026-09-04",
+      "start": "12:00 PM",
+      "end": "1:15 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "The Love Of The Fellowship",
+      "speaker_ids": "sp-yolanda",
+      "description": "Panel-style workshop on “The Love Of The Fellowship.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr07",
+      "day": "2026-09-04",
+      "start": "12:00 PM",
+      "end": "1:15 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Who Turned The Switch Off In My Head?",
+      "speaker_ids": "sp-sam",
+      "description": "Panel-style workshop on “Who Turned The Switch Off In My Head?.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr08",
+      "day": "2026-09-04",
+      "start": "1:30 PM",
+      "end": "2:45 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Good vs. Better",
+      "speaker_ids": "sp-brenda",
+      "description": "Panel-style workshop on “Good vs. Better.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr09",
+      "day": "2026-09-04",
+      "start": "1:30 PM",
+      "end": "2:45 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Is It Me, or My Defect?",
+      "speaker_ids": "sp-omar",
+      "description": "Panel-style workshop on “Is It Me, or My Defect?.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr10",
+      "day": "2026-09-04",
+      "start": "1:30 PM",
+      "end": "2:45 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "Steps 1, 2, 3",
+      "speaker_ids": "sp-tasha, sp-ramon",
+      "description": "A walk through the first three steps: honesty, open-mindedness, and willingness. Two leaders, then open sharing.",
+      "tags": "step-work, newcomer-friendly"
+    },
+    {
+      "id": "fr11",
+      "day": "2026-09-04",
+      "start": "2:00 PM",
+      "end": "3:30 PM",
+      "track": "social",
+      "room": "International",
+      "title": "Bingo",
+      "speaker_ids": "",
+      "description": "Fellowship bingo with prizes. Grab a card at the door.",
+      "tags": "social"
+    },
+    {
+      "id": "fr12",
+      "day": "2026-09-04",
+      "start": "3:15 PM",
+      "end": "4:45 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Aging In Recovery",
+      "speaker_ids": "sp-keisha",
+      "description": "Panel-style workshop on “Aging In Recovery.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr13",
+      "day": "2026-09-04",
+      "start": "3:15 PM",
+      "end": "4:45 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "My Relapse Gave Me A Deeper Look At Myself",
+      "speaker_ids": "sp-bill",
+      "description": "Panel-style workshop on “My Relapse Gave Me A Deeper Look At Myself.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr14",
+      "day": "2026-09-04",
+      "start": "3:15 PM",
+      "end": "4:45 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "The Lie Is Dead",
+      "speaker_ids": "sp-angela",
+      "description": "Panel-style workshop on “The Lie Is Dead.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr15",
+      "day": "2026-09-04",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Atheists and Agnostics Recover Too",
+      "speaker_ids": "sp-jerome",
+      "description": "Panel-style workshop on “Atheists and Agnostics Recover Too.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr16",
+      "day": "2026-09-04",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "NA Is Strong Enough to Withstand Growing Pains (Tradition 2)",
+      "speaker_ids": "sp-monique",
+      "description": "Panel-style workshop on “NA Is Strong Enough to Withstand Growing Pains (Tradition 2).” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": "traditions"
+    },
+    {
+      "id": "fr17",
+      "day": "2026-09-04",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "The Primary Purpose",
+      "speaker_ids": "sp-luis",
+      "description": "Panel-style workshop on “The Primary Purpose.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": "traditions"
+    },
+    {
+      "id": "fr18",
+      "day": "2026-09-04",
+      "start": "8:00 PM",
+      "end": "9:30 PM",
+      "track": "main",
+      "room": "Grand Ballroom",
+      "title": "Friday Night Main Speaker",
+      "speaker_ids": "sp-calvin",
+      "description": "Our Friday night main meeting. Doors open at 7:30 PM; please silence phones.",
+      "tags": "main-meeting"
+    },
+    {
+      "id": "fr19",
+      "day": "2026-09-04",
+      "start": "9:30 PM",
+      "end": "11:00 PM",
+      "track": "social",
+      "room": "International",
+      "title": "Fashion Show",
+      "speaker_ids": "",
+      "description": "Members walk the runway in their best. Cheer loud.",
+      "tags": "social"
+    },
+    {
+      "id": "fr20",
+      "day": "2026-09-04",
+      "start": "10:00 PM",
+      "end": "11:15 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Can I Tell You Who I Am and Still Be Your Friend?",
+      "speaker_ids": "sp-patricia",
+      "description": "Panel-style workshop on “Can I Tell You Who I Am and Still Be Your Friend?.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr21",
+      "day": "2026-09-04",
+      "start": "10:00 PM",
+      "end": "1:00 AM",
+      "track": "social",
+      "room": "Grand Ballroom",
+      "title": "Friday Night Dance",
+      "speaker_ids": "",
+      "description": "DJ and dance floor until 1 AM. Registration badge required.",
+      "tags": "badge-required"
+    },
+    {
+      "id": "fr22",
+      "day": "2026-09-04",
+      "start": "10:00 PM",
+      "end": "11:15 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Powerless? Or Outright Defiance",
+      "speaker_ids": "sp-terrence",
+      "description": "Panel-style workshop on “Powerless? Or Outright Defiance.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr23",
+      "day": "2026-09-04",
+      "start": "10:00 PM",
+      "end": "11:15 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "The Coldest Day in a Junkie's Life",
+      "speaker_ids": "sp-yolanda",
+      "description": "Panel-style workshop on “The Coldest Day in a Junkie's Life.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "fr24",
+      "day": "2026-09-04",
+      "start": "11:30 PM",
+      "end": "12:30 AM",
+      "track": "main",
+      "room": "Armstrong",
+      "title": "Midnight Speaker",
+      "speaker_ids": "sp-tony",
+      "description": "Late-night speaker meeting for the night owls.",
+      "tags": "late-night"
+    },
+    {
+      "id": "fr25",
+      "day": "2026-09-04",
+      "start": "12:30 AM",
+      "end": "8:00 AM",
+      "track": "marathon",
+      "room": "Garros",
+      "title": "Marathon Meeting",
+      "speaker_ids": "",
+      "description": "An overnight open-format meeting. Come and go as you need.",
+      "tags": "after-midnight"
+    },
+    {
+      "id": "sa01",
+      "day": "2026-09-05",
+      "start": "8:00 AM",
+      "end": "12:00 AM",
+      "track": "marathon",
+      "room": "Garros",
+      "title": "Meditation / Quiet Room",
+      "speaker_ids": "",
+      "description": "A quiet space open all day for prayer, meditation, reading, and reflection.",
+      "tags": "ongoing"
+    },
+    {
+      "id": "sa02",
+      "day": "2026-09-05",
+      "start": "8:30 AM",
+      "end": "9:45 AM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Attraction Not Promotion (Tradition 11)",
+      "speaker_ids": "sp-sam",
+      "description": "Panel-style workshop on “Attraction Not Promotion (Tradition 11).” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": "traditions"
+    },
+    {
+      "id": "sa03",
+      "day": "2026-09-05",
+      "start": "8:30 AM",
+      "end": "9:45 AM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "Loitering With the Intent to Recover",
+      "speaker_ids": "sp-brenda",
+      "description": "Panel-style workshop on “Loitering With the Intent to Recover.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa04",
+      "day": "2026-09-05",
+      "start": "8:30 AM",
+      "end": "9:45 AM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Recovering in Public and Suffering in Silence",
+      "speaker_ids": "sp-omar",
+      "description": "Panel-style workshop on “Recovering in Public and Suffering in Silence.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa05",
+      "day": "2026-09-05",
+      "start": "9:45 AM",
+      "end": "2:00 PM",
+      "track": "social",
+      "room": "Main Entrance",
+      "title": "Chicago Bus Tour",
+      "speaker_ids": "",
+      "description": "A four-hour guided tour with Windy City Limousine. Arrive 9:30 AM; the bus leaves at 10:00 sharp. Roll down the Magnificent Mile past Second City, Old Town and The Fudge Pot, then step off at Millennium Park, Buckingham Fountain and Navy Pier. Special stop: a short walking tour outside the Obama Presidential Center. Tickets $50 at southcityna.org.",
+      "tags": "ticketed"
+    },
+    {
+      "id": "sa06",
+      "day": "2026-09-05",
+      "start": "10:00 AM",
+      "end": "11:30 AM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Faith In The Midst Of The Storm",
+      "speaker_ids": "sp-tasha",
+      "description": "Moved to Crossfield. How members held on to faith through loss, illness, and hard seasons, and stayed clean.",
+      "tags": ""
+    },
+    {
+      "id": "sa07",
+      "day": "2026-09-05",
+      "start": "10:00 AM",
+      "end": "11:30 AM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "I Had Nowhere To Turn (Basic Text, p. 182)",
+      "speaker_ids": "sp-ramon",
+      "description": "Panel-style workshop on “I Had Nowhere To Turn (Basic Text, p. 182).” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": "literature"
+    },
+    {
+      "id": "sa08",
+      "day": "2026-09-05",
+      "start": "10:00 AM",
+      "end": "11:30 AM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "I Wanted Out, Didn't Matter How It Came",
+      "speaker_ids": "sp-keisha",
+      "description": "Panel-style workshop on “I Wanted Out, Didn't Matter How It Came.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa09",
+      "day": "2026-09-05",
+      "start": "12:00 PM",
+      "end": "1:00 PM",
+      "track": "main",
+      "room": "Grand Ballroom",
+      "title": "Mid-Day Speaker",
+      "speaker_ids": "sp-rochelle",
+      "description": "Our Saturday mid-day speaker meeting.",
+      "tags": "main-meeting"
+    },
+    {
+      "id": "sa10",
+      "day": "2026-09-05",
+      "start": "1:15 PM",
+      "end": "2:30 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "I Arrived Here, But I Haven't “Arrived”",
+      "speaker_ids": "sp-bill",
+      "description": "Panel-style workshop on “I Arrived Here, But I Haven't “Arrived”.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa11",
+      "day": "2026-09-05",
+      "start": "1:15 PM",
+      "end": "2:30 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "I No Longer Betray Myself",
+      "speaker_ids": "sp-angela",
+      "description": "Panel-style workshop on “I No Longer Betray Myself.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa12",
+      "day": "2026-09-05",
+      "start": "1:15 PM",
+      "end": "2:30 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Surviving the Fellowship",
+      "speaker_ids": "sp-jerome",
+      "description": "Panel-style workshop on “Surviving the Fellowship.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa13",
+      "day": "2026-09-05",
+      "start": "3:00 PM",
+      "end": "4:30 PM",
+      "track": "workshop",
+      "room": "International",
+      "title": "Men's Rap",
+      "speaker_ids": "sp-monique",
+      "description": "An open, honest men's sharing session.",
+      "tags": ""
+    },
+    {
+      "id": "sa14",
+      "day": "2026-09-05",
+      "start": "3:00 PM",
+      "end": "4:30 PM",
+      "track": "workshop",
+      "room": "Grand Ballroom",
+      "title": "Women's Rap",
+      "speaker_ids": "sp-luis",
+      "description": "An open, honest women's sharing session.",
+      "tags": ""
+    },
+    {
+      "id": "sa15",
+      "day": "2026-09-05",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Clean on the Screen",
+      "speaker_ids": "sp-patricia",
+      "description": "Recovery in a digital world: virtual meetings, social media, and protecting anonymity online.",
+      "tags": ""
+    },
+    {
+      "id": "sa16",
+      "day": "2026-09-05",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Sponsorship",
+      "speaker_ids": "sp-terrence",
+      "description": "Panel-style workshop on “Sponsorship.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa17",
+      "day": "2026-09-05",
+      "start": "5:00 PM",
+      "end": "6:15 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "The Gift of Desperation",
+      "speaker_ids": "sp-yolanda",
+      "description": "Panel-style workshop on “The Gift of Desperation.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa18",
+      "day": "2026-09-05",
+      "start": "7:00 PM",
+      "end": "9:00 PM",
+      "track": "main",
+      "room": "Grand Ballroom",
+      "title": "Saturday Night Main Meeting",
+      "speaker_ids": "sp-andre",
+      "description": "The main event. Countdown, readings, and our Saturday night main speaker. Doors open 6:30 PM.",
+      "tags": "main-meeting"
+    },
+    {
+      "id": "sa19",
+      "day": "2026-09-05",
+      "start": "9:30 PM",
+      "end": "10:45 PM",
+      "track": "workshop",
+      "room": "Rickenbacker",
+      "title": "Denial Allowed Me To Believe Everything",
+      "speaker_ids": "sp-sam",
+      "description": "Panel-style workshop on “Denial Allowed Me To Believe Everything.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa20",
+      "day": "2026-09-05",
+      "start": "9:30 PM",
+      "end": "10:45 PM",
+      "track": "workshop",
+      "room": "Armstrong",
+      "title": "Emotional and Spiritual Crisis",
+      "speaker_ids": "sp-brenda",
+      "description": "Panel-style workshop on “Emotional and Spiritual Crisis.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": ""
+    },
+    {
+      "id": "sa21",
+      "day": "2026-09-05",
+      "start": "9:30 PM",
+      "end": "10:00 PM",
+      "track": "social",
+      "room": "Grand Ballroom",
+      "title": "Line Dance",
+      "speaker_ids": "",
+      "description": "Get in line before the big dance. All skill levels.",
+      "tags": "social"
+    },
+    {
+      "id": "sa22",
+      "day": "2026-09-05",
+      "start": "9:30 PM",
+      "end": "10:45 PM",
+      "track": "workshop",
+      "room": "Crossfield",
+      "title": "Why Stepwork Still Matters",
+      "speaker_ids": "sp-omar",
+      "description": "Panel-style workshop on “Why Stepwork Still Matters.” Leaders share experience, strength and hope, then the floor opens for sharing. All are welcome.",
+      "tags": "step-work"
+    },
+    {
+      "id": "sa23",
+      "day": "2026-09-05",
+      "start": "10:00 PM",
+      "end": "11:30 PM",
+      "track": "social",
+      "room": "International",
+      "title": "Comedy Show",
+      "speaker_ids": "",
+      "description": "Clean comedy from members who've been through it. Advance tickets $15 at Registration.",
+      "tags": "ticketed"
+    },
+    {
+      "id": "sa24",
+      "day": "2026-09-05",
+      "start": "10:00 PM",
+      "end": "1:00 AM",
+      "track": "social",
+      "room": "Grand Ballroom",
+      "title": "Saturday Night Dance",
+      "speaker_ids": "",
+      "description": "The biggest dance of the weekend. Registration badge required.",
+      "tags": "badge-required"
+    },
+    {
+      "id": "sa25",
+      "day": "2026-09-05",
+      "start": "11:00 PM",
+      "end": "12:30 AM",
+      "track": "main",
+      "room": "Armstrong",
+      "title": "Midnight Speakers",
+      "speaker_ids": "sp-lorraine, sp-darnell",
+      "description": "Two speakers, one late night.",
+      "tags": "late-night"
+    },
+    {
+      "id": "sa26",
+      "day": "2026-09-05",
+      "start": "12:00 AM",
+      "end": "8:00 AM",
+      "track": "marathon",
+      "room": "Crossfield",
+      "title": "Pajama Marathon Meeting",
+      "speaker_ids": "",
+      "description": "Bring your pillow. Overnight open-format meeting.",
+      "tags": "after-midnight"
+    },
+    {
+      "id": "su01",
+      "day": "2026-09-06",
+      "start": "10:00 AM",
+      "end": "11:30 AM",
+      "track": "main",
+      "room": "Grand Ballroom",
+      "title": "Sunday Morning Closing Meeting",
+      "speaker_ids": "sp-gregory",
+      "description": "We close NASCAC XIV together with our closing speaker and the passing of the torch.",
+      "tags": "main-meeting"
+    },
+    {
+      "id": "su02",
+      "day": "2026-09-06",
+      "start": "1:00 PM",
+      "end": "4:00 PM",
+      "track": "social",
+      "room": "Grand Ballroom",
+      "title": "Thank You Party (Free, Open to All)",
+      "speaker_ids": "",
+      "description": "A free appreciation dance to thank everyone who made One Promise happen. Open to all, no ticket needed.",
+      "tags": "free"
+    }
+  ],
+  speakers: [
+    {
+      "id": "sp-denise",
+      "name": "Denise R.",
+      "title": "Opening Speaker",
+      "organization": "Chicago, IL",
+      "bio": "Denise got clean on the South Side and has been carrying the message home ever since. She sponsors a big family of women, loves H&I service, and says the first night of any convention is her favorite hour of the year.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-calvin",
+      "name": "Calvin B.",
+      "title": "Friday Night Main Speaker",
+      "organization": "Brooklyn, NY",
+      "bio": "Calvin came into the rooms in his twenties and never left. A longtime trusted servant at the area and regional level, he is known for honest shares about surrender, family, and learning to live on life's terms.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-tony",
+      "name": "Tony M.",
+      "title": "Friday Midnight Speaker",
+      "organization": "Chicago, IL",
+      "bio": "Tony is a night owl with a newcomer's enthusiasm. He found NA through a hospital H&I meeting and now chairs one of his own. Expect humor, the Basic Text, and a whole lot of heart.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-rochelle",
+      "name": "Rochelle W.",
+      "title": "Saturday Mid-Day Speaker",
+      "organization": "Columbus, OH",
+      "bio": "Rochelle has served on convention committees across the Midwest. She shares about working steps as a single mother, rebuilding trust, and why service kept her coming back.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-andre",
+      "name": "Andre J.",
+      "title": "Saturday Night Main Speaker",
+      "organization": "Newark, NJ",
+      "bio": "Andre's story runs from the streets of Newark to a life he never imagined. He talks straight about relapse, humility, and the promise of freedom from active addiction.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-lorraine",
+      "name": "Lorraine K.",
+      "title": "Saturday Midnight Speaker",
+      "organization": "Bronx, NY",
+      "bio": "Lorraine is a sponsor, grandmother, and Spiritual Principle a Day devotee. She'll share on staying clean through grief and the gift of just for today.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-darnell",
+      "name": "Darnell F.",
+      "title": "Saturday Midnight Speaker",
+      "organization": "Philadelphia, PA",
+      "bio": "Darnell got clean behind the walls and has been active in PR and phoneline service since he came home. His shares are about accountability and second chances.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-gregory",
+      "name": "Gregory H.",
+      "title": "Sunday Closing Speaker",
+      "organization": "Pittsburgh, PA",
+      "bio": "Gregory closes the weekend with a message on gratitude and going home to do the work. He's been a Pittsburgh convention regular for years and never misses a dance.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-tasha",
+      "name": "Tasha L.",
+      "title": "Workshop Leader",
+      "organization": "Chicago, IL",
+      "bio": "Home-group secretary and literature nerd. Loves a good step study.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-ramon",
+      "name": "Ramon V.",
+      "title": "Workshop Leader",
+      "organization": "Cicero, IL",
+      "bio": "Bilingual meeting chair who believes in carrying the message in every language.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-keisha",
+      "name": "Keisha N.",
+      "title": "Workshop Leader",
+      "organization": "Gary, IN",
+      "bio": "Sponsor of many and a firm believer in the Twelve Traditions.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-bill",
+      "name": "Bill S.",
+      "title": "Workshop Leader",
+      "organization": "Joliet, IL",
+      "bio": "H&I veteran who has been taking meetings inside for years.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-angela",
+      "name": "Angela P.",
+      "title": "Workshop Leader",
+      "organization": "Chicago, IL",
+      "bio": "Area service rep who likes to say service saved her life.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-jerome",
+      "name": "Jerome C.",
+      "title": "Workshop Leader",
+      "organization": "Evanston, IL",
+      "bio": "Newcomer-friendly, straight-talking, and always first to set up chairs.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-monique",
+      "name": "Monique D.",
+      "title": "Workshop Leader",
+      "organization": "Chicago, IL",
+      "bio": "Shares about relationships, boundaries, and working Step Four more than once.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-luis",
+      "name": "Luis G.",
+      "title": "Workshop Leader",
+      "organization": "Aurora, IL",
+      "bio": "Came in at 19; now helps young people find the rooms.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-patricia",
+      "name": "Patricia E.",
+      "title": "Workshop Leader",
+      "organization": "Milwaukee, WI",
+      "bio": "Long-time clean member who talks about aging in recovery with humor.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-terrence",
+      "name": "Terrence H.",
+      "title": "Workshop Leader",
+      "organization": "Chicago, IL",
+      "bio": "Phoneline volunteer and Basic Text study regular.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-yolanda",
+      "name": "Yolanda B.",
+      "title": "Workshop Leader",
+      "organization": "Detroit, MI",
+      "bio": "Traveled to more conventions than she can count; still gets excited for every one.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-sam",
+      "name": "Sam K.",
+      "title": "Workshop Leader",
+      "organization": "Oak Park, IL",
+      "bio": "Atheist member who found a home in NA's spiritual, not religious, program.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-brenda",
+      "name": "Brenda M.",
+      "title": "Workshop Leader",
+      "organization": "Harvey, IL",
+      "bio": "Shares on relapse and coming back without shame.",
+      "photo_url": ""
+    },
+    {
+      "id": "sp-omar",
+      "name": "Omar A.",
+      "title": "Workshop Leader",
+      "organization": "Chicago, IL",
+      "bio": "PR committee member and the reason half the flyers look good.",
+      "photo_url": ""
+    }
+  ],
+  exhibitors: [
+    {
+      "name": "NASCAC XIV Merch Table",
+      "tier": "Convention Merch",
+      "booth": "Registration Foyer · Table 1",
+      "category": "Apparel & keepsakes",
+      "description": "Official One Promise tees, hoodies, hats and mugs. [Merch prices]",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "F&E Ticket Table",
+      "tier": "Convention Merch",
+      "booth": "Registration Foyer · Table 2",
+      "category": "Event tickets",
+      "description": "Bus Tour ($50) and Comedy Show ($15) tickets, plus info on upcoming area events.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "NA Literature Table",
+      "tier": "Literature",
+      "booth": "Registration Foyer · Table 3",
+      "category": "Books & pamphlets",
+      "description": "Basic Text, It Works: How and Why, Living Clean, Just for Today, Spiritual Principle a Day, IPs, keytags and medallions.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Southside Stitch Co.",
+      "tier": "Vendors",
+      "booth": "Vendor Row · Booth 4",
+      "category": "Custom apparel",
+      "description": "Recovery-themed tees and on-the-spot embroidery.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Windy City Wax",
+      "tier": "Vendors",
+      "booth": "Vendor Row · Booth 5",
+      "category": "Candles & gifts",
+      "description": "Hand-poured soy candles, including the “Just for Today” scent.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Clean & Crowned",
+      "tier": "Vendors",
+      "booth": "Vendor Row · Booth 6",
+      "category": "Jewelry",
+      "description": "Medallion holders, charm bracelets and keytag chains.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Serenity Scents",
+      "tier": "Vendors",
+      "booth": "Vendor Row · Booth 7",
+      "category": "Body care",
+      "description": "Body oils, shea butters and incense.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Sweet Surrender Treats",
+      "tier": "Vendors",
+      "booth": "Vendor Row · Booth 8",
+      "category": "Packaged sweets",
+      "description": "Sealed baked goods and candy to take home.",
+      "url": "",
+      "logo_url": ""
+    },
+    {
+      "name": "Hospitality",
+      "tier": "Hospitality",
+      "booth": "International Foyer",
+      "category": "Coffee & fellowship",
+      "description": "Free coffee, tea and snacks while supplies last. Staffed by volunteers. Thank them!",
+      "url": "",
+      "logo_url": ""
+    }
+  ]
+};
+
+/* =====================================================================
+   APP — no edits needed below this line.
+   ===================================================================== */
+(function(){
+'use strict';
+
+var $ = function(s, r){ return (r || document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function ph(s){ return esc(s).replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>'); }
+
+var ICON = {
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  star:'<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>'
+};
+
+/* ---------- state ---------- */
+var S = {
+  updates: [], sessions: [], speakers: [], exhibitors: [],
+  src: {}, spkById: {}, days: [], tracks: {},
+  day: null, track: 'all', open: {}, agenda: {},
+  demo: null, presetIdx: -1, storageOK: true, lastSync: null, tab: 'home'
+};
+
+/* ---------- storage (fails safe) ---------- */
+var AGENDA_KEY = (EVENT.id || 'event') + ':agenda';
+var store = {
+  get: function(k){ try { return window.localStorage.getItem(k); } catch(e) { return null; } },
+  set: function(k, v){ try { window.localStorage.setItem(k, v); return true; } catch(e) { return false; } }
+};
+function testStorage(){
+  try { var k = '__t' + Date.now(); localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; }
+  catch(e) { return false; }
+}
+function loadAgenda(){
+  try {
+    var v = JSON.parse(store.get(AGENDA_KEY) || '[]');
+    if (Array.isArray(v)) v.forEach(function(id){ S.agenda[id] = true; });
+  } catch(e) {}
+}
+function saveAgenda(){ store.set(AGENDA_KEY, JSON.stringify(Object.keys(S.agenda))); }
+
+/* ---------- clock (real or demo) ---------- */
+function now(){ return S.demo ? new Date(S.demo.base + (Date.now() - S.demo.startedAt)) : new Date(); }
+function setPreset(i){
+  var p = DEMO_CLOCK.presets && DEMO_CLOCK.presets[i];
+  if (p) { S.demo = { base: Date.parse(p.iso), startedAt: Date.now() }; S.presetIdx = i; }
+  else { S.demo = null; S.presetIdx = -1; }
+}
+function initClock(){
+  var q = new URLSearchParams(location.search);
+  var on = !!DEMO_CLOCK.enabled;
+  if (q.has('demo')) on = true;
+  if (q.has('live')) on = false;
+  if (on) {
+    var idx = DEMO_CLOCK.defaultPreset || 0, d = q.get('demo');
+    if (d && /^\d+$/.test(d) && DEMO_CLOCK.presets[+d]) idx = +d;
+    setPreset(idx);
+  }
+}
+var TZ = EVENT.timeZone || undefined;
+function fmt(d, opts){ try { return new Intl.DateTimeFormat('en-US', Object.assign({ timeZone: TZ }, opts)).format(d); } catch(e) { return new Intl.DateTimeFormat('en-US', opts).format(d); } }
+function fmtClock(d){ return fmt(d, { weekday:'short', hour:'numeric', minute:'2-digit' }); }
+
+/* ---------- time parsing ---------- */
+function parseClock(t){
+  t = String(t || '').trim().toLowerCase().replace(/\./g, '');
+  if (t === 'noon') return 720;
+  if (t === 'midnight') return 0;
+  var m = t.match(/^(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm|a|p)?$/);
+  if (!m) return null;
+  var h = +m[1], mi = +(m[2] || 0), ap = m[3];
+  if (ap) { if (h === 12) h = 0; if (ap.charAt(0) === 'p') h += 12; }
+  if (h > 23 || mi > 59) return null;
+  return h * 60 + mi;
+}
+function fmtMin(m){
+  m = ((m % 1440) + 1440) % 1440;
+  var h = Math.floor(m / 60), mi = m % 60, ap = h < 12 ? 'AM' : 'PM', h12 = h % 12 || 12;
+  return h12 + ':' + (mi < 10 ? '0' : '') + mi + ' ' + ap;
+}
+function dayBase(day){ return Date.parse(day + 'T00:00:00' + (EVENT.utcOffset || 'Z')); }
+function parseStamp(v){
+  v = String(v || '').trim(); if (!v) return 0;
+  var m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)?)?$/i);
+  if (m) {
+    var h = +(m[4] || 0);
+    if (m[7]) { if (h === 12) h = 0; if (/p/i.test(m[7])) h += 12; }
+    var iso = m[3] + '-' + pad(m[1]) + '-' + pad(m[2]) + 'T' + pad(h) + ':' + (m[5] || '00') + ':' + (m[6] ? pad(m[6]) : '00') + (EVENT.utcOffset || 'Z');
+    return Date.parse(iso) || 0;
+  }
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(v)) v += (EVENT.utcOffset || 'Z');
+  return Date.parse(v) || 0;
+}
+function pad(n){ n = +n; return (n < 10 ? '0' : '') + n; }
+function splitList(v){ return String(v || '').split(/[;,|]/).map(function(x){ return x.trim(); }).filter(Boolean); }
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  var rows = [], row = [], f = '', q = false;
+  for (var i = 0; i < text.length; i++) {
+    var c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i+1] === '"') { f += '"'; i++; } else q = false; }
+      else f += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f); rows.push(row); row = []; f = ''; }
+    else if (c !== '\r') f += c;
+  }
+  if (f !== '' || row.length) { row.push(f); rows.push(row); }
+  return rows;
+}
+function csvToObjects(text){
+  var rows = parseCSV(String(text).replace(/^\uFEFF/, '')).filter(function(r){ return r.some(function(c){ return c.trim() !== ''; }); });
+  if (rows.length < 2) return [];
+  var h = rows[0].map(function(x){ return x.trim().toLowerCase().replace(/\s+/g, '_'); });
+  return rows.slice(1).map(function(r){ var o = {}; h.forEach(function(k, i){ o[k] = (r[i] == null ? '' : r[i]).trim(); }); return o; });
+}
+function fetchSheet(url, required){
+  if (!url || /PASTE|YOUR_|^\s*$/i.test(url)) return Promise.reject(new Error('no url'));
+  var ctrl = ('AbortController' in window) ? new AbortController() : null;
+  var timer = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 9000);
+  var u = url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now();
+  return fetch(u, { cache: 'no-store', signal: ctrl ? ctrl.signal : undefined })
+    .then(function(r){ clearTimeout(timer); if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(t){
+      if (/^\s*<(!doctype|html)/i.test(t)) throw new Error('not csv');
+      var rows = csvToObjects(t).filter(function(o){ return required.every(function(k){ return o[k]; }); });
+      if (!rows.length) throw new Error('empty');
+      return rows;
+    });
+}
+function loadAll(manual){
+  var feeds = [
+    ['updates', SHEETS.UPDATES, ['title']],
+    ['sessions', SHEETS.SESSIONS, ['id','day','start','title']],
+    ['speakers', SHEETS.SPEAKERS, ['id','name']],
+    ['exhibitors', SHEETS.EXHIBITORS, ['name']]
+  ];
+  var btn = $('#refreshBtn'); btn.classList.add('spin');
+  return Promise.all(feeds.map(function(f){
+    return fetchSheet(f[1], f[2]).then(function(rows){ S[f[0]] = rows; S.src[f[0]] = 'sheet'; })
+      .catch(function(){ if (S.src[f[0]] !== 'sheet') { S[f[0]] = (FALLBACK[f[0]] || []).map(function(o){ return Object.assign({}, o); }); S.src[f[0]] = 'fallback'; } });
+  })).then(function(){
+    S.lastSync = new Date();
+    normalize(); renderAll();
+    btn.classList.remove('spin');
+    if (manual) toast(anySheet() ? 'Content refreshed' : 'Showing built-in content');
+  });
+}
+function anySheet(){ return ['updates','sessions','speakers','exhibitors'].some(function(k){ return S.src[k] === 'sheet'; }); }
+
+/* ---------- normalize ---------- */
+function normalize(){
+  S.tracks = {};
+  (EVENT.tracks || []).forEach(function(t){ S.tracks[t.id] = t; });
+  function trackOf(v){
+    var key = String(v || '').trim().toLowerCase();
+    for (var id in S.tracks) { if (id.toLowerCase() === key || S.tracks[id].name.toLowerCase() === key) return id; }
+    if (!key) key = 'general';
+    if (!S.tracks[key]) S.tracks[key] = { id: key, name: v || 'General', color: '#475569' };
+    return key;
+  }
+  S.spkById = {};
+  S.speakers.forEach(function(p){ S.spkById[p.id] = p; });
+  var roll = (EVENT.dayRolloverHour == null ? 6 : EVENT.dayRolloverHour) * 60;
+  S.sessions = S.sessions.map(function(s){
+    var sm = parseClock(s.start); if (sm == null) return null;
+    if (sm < roll) sm += 1440;
+    var em = parseClock(s.end);
+    if (em == null) em = sm + 60;
+    else { if (em < roll) em += 1440; if (em <= sm) em += 1440; }
+    var base = dayBase(s.day); if (isNaN(base)) return null;
+    s._sm = sm; s._em = em; s._start = base + sm * 60000; s._end = base + em * 60000;
+    s._track = trackOf(s.track);
+    s._spk = splitList(s.speaker_ids).map(function(id){ return S.spkById[id]; }).filter(Boolean);
+    s._tags = splitList(s.tags);
+    s._ongoing = s._tags.some(function(t){ return /^ongoing$/i.test(t); });
+    return s;
+  }).filter(Boolean).sort(function(a, b){ return a._start - b._start || a._end - b._end || a.title.localeCompare(b.title); });
+  var days = (EVENT.days || []).map(function(d){ return Object.assign({}, d); });
+  S.sessions.forEach(function(s){
+    if (!days.some(function(d){ return d.date === s.day; })) {
+      var b = new Date(dayBase(s.day) + 12 * 3600000);
+      days.push({ date: s.day, label: fmt(b, { weekday: 'long' }), short: fmt(b, { weekday: 'short', month: 'short', day: 'numeric' }) });
+    }
+  });
+  days.sort(function(a, b){ return a.date < b.date ? -1 : 1; });
+  S.days = days;
+  S.updates.forEach(function(u){ u._ts = parseStamp(u.timestamp); u._type = updType(u.type); });
+  S.updates.sort(function(a, b){ return b._ts - a._ts; });
+  if (!S.day || !S.days.some(function(d){ return d.date === S.day; })) S.day = currentDay() || (S.days[0] && S.days[0].date);
+}
+function updType(t){ t = String(t || '').toLowerCase(); if (/urgent|alert|emerg/.test(t)) return 'urgent'; if (/room|move|change|location/.test(t)) return 'room'; return 'ann'; }
+function currentDay(){
+  var t = now().getTime(), roll = (EVENT.dayRolloverHour == null ? 6 : EVENT.dayRolloverHour) * 3600000;
+  for (var i = 0; i < S.days.length; i++) { var b = dayBase(S.days[i].date) + roll; if (t >= b && t < b + 86400000) return S.days[i].date; }
+  return null;
+}
+function dayObj(date){ for (var i = 0; i < S.days.length; i++) if (S.days[i].date === date) return S.days[i]; return { date: date, label: date, short: date }; }
+function trk(id){ return S.tracks[id] || { name: id, color: '#475569' }; }
+function sessById(id){ for (var i = 0; i < S.sessions.length; i++) if (S.sessions[i].id === id) return S.sessions[i]; return null; }
+function visibleUpdates(){ var t = now().getTime(); return S.updates.filter(function(u){ return !S.demo || !u._ts || u._ts <= t; }); }
+
+/* ---------- rendering helpers ---------- */
+function initials(n){ return String(n || '?').replace(/\(.*?\)/g, '').replace(/[^A-Za-z0-9\s\u00C0-\u024F]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map(function(w){ return w.charAt(0); }).join('').toUpperCase(); }
+function hashN(s, n){ var h = 0; s = String(s); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h) % n; }
+function avatar(p, cls){
+  if (p.photo_url) return '<img class="av ' + (cls || '') + '" src="' + esc(p.photo_url) + '" alt="" loading="lazy">';
+  return '<span class="av c' + hashN(p.id || p.name, 4) + ' ' + (cls || '') + '" aria-hidden="true">' + esc(initials(p.name)) + '</span>';
+}
+function spkLine(s){ return s._spk.map(function(p){ return p.name + (p.organization ? ' · ' + p.organization : ''); }).join(', '); }
+function relTime(ts){
+  if (!ts) return '';
+  var d = (now().getTime() - ts) / 60000;
+  if (d < 1) return 'just now';
+  if (d < 60) return Math.round(d) + ' min ago';
+  if (d < 60 * 24) return Math.round(d / 60) + ' hr ago';
+  return fmt(new Date(ts), { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+function toast(msg){ var t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove('show'); }, 2200); }
+function paintLogo(el){
+  if (!el) return;
+  if (EVENT.logo) {
+    el.style.webkitMask = 'url("' + EVENT.logo + '") center/contain no-repeat';
+    el.style.mask = 'url("' + EVENT.logo + '") center/contain no-repeat';
+    el.style.background = 'currentColor';
+    el.style.display = 'inline-block';
+  } else {
+    el.textContent = initials(EVENT.shortName || EVENT.name);
+    el.style.cssText += ';display:inline-grid;place-items:center;border-radius:50%;border:2px solid currentColor;font-family:var(--font-display);font-weight:800;font-size:.8em';
+  }
+}
+
+/* ---------- HOME ---------- */
+function renderHero(){
+  var h = $('#hero');
+  h.innerHTML =
+    '<div class="hero-top"><span class="logo" id="heroLogo" aria-hidden="true"></span>' +
+    '<div><div class="kicker">' + esc(EVENT.kicker || '') + '</div></div></div>' +
+    '<h1>' + esc(EVENT.name) + '</h1>' +
+    '<div class="sub">' + (EVENT.subtitleHTML || esc(EVENT.subtitle || '')) + '</div>' +
+    '<div class="meta"><span>' + ICON.cal + esc(EVENT.datesLabel) + '</span><span>' + ICON.pin + esc(EVENT.venueName) + ', ' + esc(EVENT.cityLabel) + '</span></div>' +
+    '<div class="cd" id="cd"></div>';
+  paintLogo($('#heroLogo'));
+  tickCountdown();
+}
+function tickCountdown(){
+  var el = $('#cd'); if (!el) return;
+  var t = now().getTime(), start = Date.parse(EVENT.startISO), end = Date.parse(EVENT.endISO);
+  var target, label;
+  if (t < start) { target = start; label = 'Until we open'; }
+  else if (t < end) {
+    var nxt = S.sessions.filter(function(s){ return s._track === EVENT.countdownTrack && s._start > t; })[0];
+    if (nxt) { target = nxt._start; label = 'Until ' + nxt.title + ' · ' + nxt.room; }
+    else { el.innerHTML = '<div class="cd-label">' + esc(EVENT.shortName) + ' is live</div><div class="cd-msg">' + esc(EVENT.liveMessage || 'Happening now') + '</div>'; return; }
+  } else { el.innerHTML = '<div class="cd-label">That\u2019s a wrap</div><div class="cd-msg">' + esc(EVENT.afterMessage || 'Thanks for joining us') + '</div>'; return; }
+  var diff = Math.max(0, target - t), s = Math.floor(diff / 1000);
+  var parts = [[Math.floor(s / 86400), 'Days'], [Math.floor(s % 86400 / 3600), 'Hours'], [Math.floor(s % 3600 / 60), 'Min'], [s % 60, 'Sec']];
+  var key = label + '|';
+  if (el.dataset.key !== key) {
+    el.dataset.key = key;
+    el.innerHTML = '<div class="cd-label">' + esc(label) + '</div><div class="cd-grid">' + parts.map(function(p){ return '<div class="cd-box"><b></b><small>' + p[1] + '</small></div>'; }).join('') + '</div>';
+  }
+  $$('.cd-box b', el).forEach(function(b, i){ var v = String(parts[i][0]); if (i > 0 && v.length < 2) v = '0' + v; if (b.textContent !== v) b.textContent = v; });
+}
+function miniRow(s, whenTxt){
+  var t = trk(s._track);
+  return '<button class="mini" style="--tc:' + esc(t.color) + '" data-act="goto" data-day="' + esc(s.day) + '" data-id="' + esc(s.id) + '">' +
+    '<span class="bar"></span><span><b>' + esc(s.title) + '</b><small>' + (whenTxt ? '<span class="when">' + esc(whenTxt) + '</span> · ' : '') + esc(fmtMin(s._sm) + '–' + fmtMin(s._em) + ' · ' + (s.room || '')) + (s._spk.length ? ' · ' + esc(s._spk.map(function(p){ return p.name; }).join(', ')) : '') + '</small></span></button>';
+}
+function renderNowNext(){
+  var t = now().getTime(), el = $('#nowNext');
+  var live = S.sessions.filter(function(s){ return s._start <= t && t < s._end; });
+  var liveMain = live.filter(function(s){ return !s._ongoing; });
+  var ongoing = live.filter(function(s){ return s._ongoing; });
+  var upcoming = S.sessions.filter(function(s){ return s._start > t && !s._ongoing; });
+  var next = upcoming.length ? upcoming.filter(function(s){ return s._start === upcoming[0]._start; }) : [];
+  var html = '<div class="h-card">Happening Now <button class="linkbtn" data-act="tab" data-tab="schedule">Schedule →</button></div>';
+  if (!S.sessions.length) { el.innerHTML = html + '<p class="muted small">Schedule coming soon.</p>'; return; }
+  if (t < S.sessions[0]._start) {
+    html += '<div class="nn-sec"><div class="nn-head">First up · ' + esc(dayObj(S.sessions[0].day).label) + '</div>' + next.slice(0, 4).map(function(s){ return miniRow(s); }).join('') + '</div>';
+    el.innerHTML = html; return;
+  }
+  html += '<div class="nn-sec"><div class="nn-head"><span class="pulse"></span>Now</div>';
+  if (liveMain.length) {
+    html += liveMain.slice(0, 5).map(function(s){ var left = Math.round((s._end - t) / 60000); return miniRow(s, left < 90 ? left + ' min left' : 'until ' + fmtMin(s._em)); }).join('');
+    if (liveMain.length > 5) html += '<p class="small muted">+ ' + (liveMain.length - 5) + ' more in progress</p>';
+  } else html += '<p class="small muted">' + (upcoming.length ? 'Between sessions. Grab a coffee.' : 'Nothing else scheduled. Thanks for coming!') + '</p>';
+  if (ongoing.length) html += '<div class="chips">' + ongoing.map(function(s){ return '<span class="chip" style="--tc:' + esc(trk(s._track).color) + '"><i></i>Open: ' + esc(s.title) + ' · ' + esc(s.room) + '</span>'; }).join('') + '</div>';
+  html += '</div>';
+  if (next.length) {
+    var mins = Math.round((next[0]._start - t) / 60000);
+    var when = mins < 60 ? 'in ' + mins + ' min' : (next[0].day === currentDay() ? 'at ' + fmtMin(next[0]._sm) : fmt(new Date(next[0]._start), { weekday: 'short' }) + ' ' + fmtMin(next[0]._sm));
+    html += '<div class="nn-sec"><div class="nn-head">Up next · ' + esc(when) + '</div>' + next.slice(0, 5).map(function(s){ return miniRow(s); }).join('') + '</div>';
+  }
+  el.innerHTML = html;
+}
+function renderFeatures(){
+  var list = EVENT.highlights || [], wrap = $('#featuresWrap');
+  if (!list.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  $('#features').innerHTML = list.map(function(f){
+    var s = f.sessionId ? sessById(f.sessionId) : null;
+    var color = f.color || (s ? trk(s._track).color : 'var(--brand)');
+    var attrs = s ? ' data-act="goto" data-day="' + esc(s.day) + '" data-id="' + esc(s.id) + '"' : (f.tab ? ' data-act="tab" data-tab="' + esc(f.tab) + '"' : '');
+    return '<button class="feat glass" style="--tc:' + esc(color) + '"' + attrs + '>' +
+      (f.price ? '<span class="price">' + ph(f.price) + '</span>' : '') +
+      '<div class="tag">' + esc(f.tag || (s ? dayObj(s.day).label + ' · ' + fmtMin(s._sm) : '')) + '</div>' +
+      '<h3>' + esc(f.title) + '</h3><p>' + ph(f.blurb || '') + '</p></button>';
+  }).join('');
+}
+var WX = { 0:['Clear','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Drizzle','🌦️'],61:['Light rain','🌧️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],66:['Freezing rain','🌧️'],67:['Freezing rain','🌧️'],71:['Light snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','❄️'],77:['Snow grains','🌨️'],80:['Showers','🌦️'],81:['Showers','🌦️'],82:['Heavy showers','⛈️'],85:['Snow showers','🌨️'],86:['Snow showers','🌨️'],95:['Thunderstorms','⛈️'],96:['Thunderstorms','⛈️'],99:['Thunderstorms','⛈️'] };
+function loadWeather(){
+  var el = $('#weather');
+  el.innerHTML = '<div class="h-card">Weather · ' + esc(EVENT.weatherLabel || EVENT.cityLabel) + '</div><p class="small muted">Loading…</p>';
+  var u = 'https://api.open-meteo.com/v1/forecast?latitude=' + EVENT.lat + '&longitude=' + EVENT.lon +
+    '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min' +
+    '&temperature_unit=' + (EVENT.tempUnit || 'fahrenheit') + '&wind_speed_unit=' + (EVENT.windUnit || 'mph') + '&timezone=' + encodeURIComponent(EVENT.timeZone || 'auto') + '&forecast_days=3';
+  fetch(u, { cache: 'no-store' }).then(function(r){ if (!r.ok) throw 0; return r.json(); }).then(function(d){
+    var c = d.current, w = WX[c.weather_code] || ['—', '🌡️'], unit = (EVENT.tempUnit === 'celsius' ? '°C' : '°F');
+    var days = d.daily.time.map(function(tm, i){
+      var ww = WX[d.daily.weather_code[i]] || ['', '🌡️'];
+      var lbl = i === 0 ? 'Today' : fmt(new Date(tm + 'T12:00:00' + (EVENT.utcOffset || 'Z')), { weekday: 'short' });
+      return '<div class="wx-day">' + lbl + '<span>' + ww[1] + '</span>' + Math.round(d.daily.temperature_2m_max[i]) + '° / ' + Math.round(d.daily.temperature_2m_min[i]) + '°</div>';
+    }).join('');
+    el.innerHTML = '<div class="h-card">Weather · ' + esc(EVENT.weatherLabel || EVENT.cityLabel) + '<small class="muted" style="font-weight:600;font-size:.66rem">live</small></div>' +
+      '<div class="wx"><div class="wx-icon">' + w[1] + '</div><div><div class="wx-temp">' + Math.round(c.temperature_2m) + unit + '</div>' +
+      '<div class="small muted" style="font-weight:600">' + esc(w[0]) + ' · feels ' + Math.round(c.apparent_temperature) + '° · wind ' + Math.round(c.wind_speed_10m) + ' ' + (EVENT.windUnit || 'mph') + '</div></div></div>' +
+      '<div class="wx-days">' + days + '</div>';
+  }).catch(function(){
+    el.innerHTML = '<div class="h-card">Weather · ' + esc(EVENT.weatherLabel || EVENT.cityLabel) + '</div><p class="small muted">Weather is unavailable right now.</p>';
+  });
+}
+function updRow(u){
+  var lbl = { ann: 'Announcement', room: 'Room change', urgent: 'Urgent' }[u._type];
+  return '<div class="upd ' + (u._type === 'urgent' ? 'urgent' : '') + '"><div><span class="badge ' + u._type + '">' + lbl + '</span>' +
+    '<h4>' + esc(u.title) + '</h4><p>' + esc(u.message) + '</p>' + (u._ts ? '<time>' + esc(relTime(u._ts)) + '</time>' : '') + '</div></div>';
+}
+function renderHomeUpdates(){
+  var list = visibleUpdates().slice(0, 3);
+  $('#homeUpdates').innerHTML = '<div class="h-card">Latest Updates <button class="linkbtn" data-act="tab" data-tab="updates">All →</button></div>' +
+    (list.length ? list.map(updRow).join('') : '<p class="small muted">No updates yet.</p>');
+}
+
+/* ---------- SCHEDULE ---------- */
+function sessionCard(s, opts){
+  opts = opts || {};
+  var t = trk(s._track), tnow = now().getTime();
+  var isLive = s._start <= tnow && tnow < s._end, isPast = s._end <= tnow, starred = !!S.agenda[s.id];
+  var open = opts.agenda ? false : !!S.open[s.id];
+  var mainAct = opts.agenda ? 'data-act="goto" data-day="' + esc(s.day) + '" data-id="' + esc(s.id) + '"' : 'data-act="toggle" data-id="' + esc(s.id) + '" aria-expanded="' + open + '"';
+  var h = '<article class="sess glass' + (open ? ' open' : '') + (isPast ? ' past' : '') + (opts.conflict ? ' conflict' : '') + '" id="' + (opts.agenda ? 'ag-' : 'sess-') + esc(s.id) + '" style="--tc:' + esc(t.color) + '">' +
+    '<button class="sess-main" ' + mainAct + '>' +
+      '<div class="sess-time">' + fmtMin(s._sm) + '<span>– ' + fmtMin(s._em) + '</span></div>' +
+      '<div class="sess-body"><div class="sess-track"><span class="tn">' + esc(t.name) + '</span>' + (s.room ? '<span>' + esc(s.room) + '</span>' : '') +
+        (isLive ? '<span class="livetag">LIVE</span>' : '') + (opts.conflict ? '<span class="conflicttag">OVERLAP</span>' : '') + '</div>' +
+        '<h3>' + esc(s.title) + '</h3>' + (s._spk.length ? '<div class="sess-spk">' + esc(spkLine(s)) + '</div>' : '') + '</div>' +
+    '</button>' +
+    '<button class="star" data-act="star" data-id="' + esc(s.id) + '" aria-pressed="' + starred + '" aria-label="' + (starred ? 'Remove from' : 'Add to') + ' My Agenda">' + ICON.star + '</button>';
+  if (!opts.agenda) {
+    h += '<div class="sess-more">' + (s.description ? '<p>' + esc(s.description) + '</p>' : '') +
+      (s._spk.length ? '<div class="spkbtns">' + s._spk.map(function(p){ return '<button class="spkbtn" data-act="speaker" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>'; }).join('') + '</div>' : '') +
+      (s._tags.length ? '<div class="tags">' + s._tags.map(function(x){ return '<span class="tagx">' + esc(x.replace(/-/g, ' ')) + '</span>'; }).join('') + '</div>' : '') +
+    '</div>';
+  }
+  return h + '</article>';
+}
+function renderSchedule(){
+  $('#dayTabs').innerHTML = S.days.map(function(d){
+    return '<button role="tab" data-act="day" data-day="' + esc(d.date) + '" class="' + (d.date === S.day ? 'active' : '') + '" aria-selected="' + (d.date === S.day) + '"><span class="ll">' + esc(d.label) + '</span><span class="sl">' + esc(d.label.slice(0, 3)) + '</span> <small>' + esc(d.short || '') + '</small></button>';
+  }).join('');
+  var ad = $('#dayTabs .active'); if (ad && ad.scrollIntoView) ad.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  var daySess = S.sessions.filter(function(s){ return s.day === S.day; });
+  var present = {}; daySess.forEach(function(s){ present[s._track] = true; });
+  var ids = Object.keys(S.tracks).filter(function(id){ return present[id]; });
+  if (S.track !== 'all' && !present[S.track]) S.track = 'all';
+  $('#trackTabs').innerHTML = '<button role="tab" data-act="track" data-track="all" class="' + (S.track === 'all' ? 'active' : '') + '" style="--tc:var(--ink)">All</button>' +
+    ids.map(function(id){ var t = S.tracks[id]; return '<button role="tab" data-act="track" data-track="' + esc(id) + '" class="' + (S.track === id ? 'active' : '') + '" style="--tc:' + esc(t.color) + '"><i></i>' + esc(t.name) + '</button>'; }).join('');
+  var list = daySess.filter(function(s){ return S.track === 'all' || s._track === S.track; });
+  if (!list.length) { $('#sessionList').innerHTML = '<div class="empty glass card"><b>Nothing scheduled here.</b><p class="muted small">Try another day or track.</p></div>'; return; }
+  var html = '', last = null;
+  list.forEach(function(s){ if (s._sm !== last) { html += '<div class="timehead">' + fmtMin(s._sm) + (s._sm >= 1440 ? ' · after midnight' : '') + '</div>'; last = s._sm; } html += sessionCard(s); });
+  $('#sessionList').innerHTML = html;
+}
+function goToSession(day, id){
+  S.day = day; S.open[id] = true;
+  var s = sessById(id); if (s && S.track !== 'all' && s._track !== S.track) S.track = 'all';
+  closeSheet(); showTab('schedule'); renderSchedule();
+  var el = document.getElementById('sess-' + id);
+  if (el) { setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }, 60); }
+}
+
+/* ---------- AGENDA ---------- */
+function renderAgenda(){
+  var list = S.sessions.filter(function(s){ return S.agenda[s.id]; });
+  var n = list.length, c = $('#agendaCount'); c.hidden = !n; c.textContent = n;
+  var el = $('#agendaList');
+  var note = S.storageOK ? '' : '<p class="note">Private browsing detected: your agenda works now but will reset when you close this page.</p>';
+  if (!n) { el.innerHTML = '<div class="empty glass card"><b>Your agenda is empty.</b><p class="muted small">Tap the ☆ on any session to save it here.</p><button class="btn alt" data-act="tab" data-tab="schedule">Browse the schedule</button>' + note + '</div>'; return; }
+  var conflicts = {}, pairs = [];
+  var timed = list.filter(function(s){ return !s._ongoing; });
+  for (var i = 0; i < timed.length; i++) for (var j = i + 1; j < timed.length && timed[j]._start < timed[i]._end; j++) {
+    conflicts[timed[i].id] = conflicts[timed[j].id] = true; pairs.push([timed[i], timed[j]]);
+  }
+  var html = '';
+  if (pairs.length) html += '<div class="warn"><b>Heads up: ' + pairs.length + ' overlap' + (pairs.length > 1 ? 's' : '') + '.</b><ul>' +
+    pairs.map(function(p){ return '<li>' + esc(p[0].title) + ' (' + fmtMin(p[0]._sm) + ') overlaps ' + esc(p[1].title) + ' (' + fmtMin(p[1]._sm) + ')</li>'; }).join('') + '</ul></div>';
+  var lastDay = null;
+  list.forEach(function(s){
+    if (s.day !== lastDay) { html += '<div class="timehead">' + esc(dayObj(s.day).label) + ' · ' + esc(dayObj(s.day).short || '') + '</div>'; lastDay = s.day; }
+    html += sessionCard(s, { agenda: true, conflict: conflicts[s.id] });
+  });
+  el.innerHTML = html + note;
+}
+function toggleStar(id){
+  if (S.agenda[id]) { delete S.agenda[id]; toast('Removed from My Agenda'); }
+  else { S.agenda[id] = true; toast('Added to My Agenda ★'); }
+  saveAgenda();
+  $$('.star[data-id="' + cssEsc(id) + '"]').forEach(function(b){ var on = !!S.agenda[id]; b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', (on ? 'Remove from' : 'Add to') + ' My Agenda'); });
+  renderAgenda();
+}
+function cssEsc(s){ return window.CSS && CSS.escape ? CSS.escape(s) : String(s).replace(/["\\]/g, '\\$&'); }
+
+/* ---------- SPEAKERS ---------- */
+function speakerSessions(id){ return S.sessions.filter(function(s){ return s._spk.some(function(p){ return p.id === id; }); }); }
+function renderSpeakers(){
+  var q = ($('#spkSearch').value || '').trim().toLowerCase();
+  var list = S.speakers.filter(function(p){ return !q || [p.name, p.title, p.organization, p.bio].concat(speakerSessions(p.id).map(function(s){ return s.title; })).join(' ').toLowerCase().indexOf(q) > -1; });
+  if (!list.length) { $('#spkList').innerHTML = '<div class="empty glass card"><b>No speakers match “' + esc(q) + '”.</b></div>'; return; }
+  var groups = EVENT.speakerGroups || null, html = '';
+  function grid(arr){ return '<div class="spk-grid">' + arr.map(function(p){
+    return '<button class="spk glass" data-act="speaker" data-id="' + esc(p.id) + '">' + avatar(p) + '<b>' + esc(p.name) + '</b>' +
+      (p.title ? '<span class="role">' + esc(p.title) + '</span>' : '') + (p.organization ? '<small>' + esc(p.organization) + '</small>' : '') + '</button>';
+  }).join('') + '</div>'; }
+  if (groups) {
+    groups.forEach(function(g){ var arr = list.filter(function(p){ return new RegExp(g.match, 'i').test(p.title || ''); }); if (arr.length) html += '<div class="eyebrow spk-group">' + esc(g.label) + '</div>' + grid(arr); });
+    var rest = list.filter(function(p){ return !groups.some(function(g){ return new RegExp(g.match, 'i').test(p.title || ''); }); });
+    if (rest.length) html += '<div class="eyebrow spk-group">More</div>' + grid(rest);
+  } else html = grid(list);
+  $('#spkList').innerHTML = html;
+}
+function openSpeaker(id){
+  var p = S.spkById[id]; if (!p) return;
+  var ss = speakerSessions(id);
+  $('#sheetBody').innerHTML = '<div class="who">' + avatar(p) + '<div><div class="eyebrow">' + esc(p.title || 'Speaker') + '</div><h2 id="sheetTitle">' + esc(p.name) + '</h2>' +
+    (p.organization ? '<div class="muted small" style="font-weight:600">' + esc(p.organization) + '</div>' : '') + '</div></div>' +
+    (p.bio ? '<p class="bio">' + esc(p.bio) + '</p>' : '') +
+    (ss.length ? '<div class="eyebrow" style="margin-bottom:.3rem">Sessions</div>' + ss.map(function(s){ return miniRow(s, dayObj(s.day).label.slice(0, 3)); }).join('') : '');
+  openSheet();
+}
+function openSheet(){ var s = $('#sheet'); s.classList.add('open'); s.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; setTimeout(function(){ var c = $('.close', s); if (c) c.focus(); }, 30); }
+function closeSheet(){ var s = $('#sheet'); if (!s.classList.contains('open')) return; s.classList.remove('open'); s.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+
+/* ---------- EXHIBITORS / VENDORS ---------- */
+function renderVendors(){
+  var q = ($('#venSearch').value || '').trim().toLowerCase();
+  var list = S.exhibitors.filter(function(x){ return !q || [x.name, x.tier, x.booth, x.category, x.description].join(' ').toLowerCase().indexOf(q) > -1; });
+  if (!list.length) { $('#venList').innerHTML = '<div class="empty glass card"><b>Nothing matches “' + esc(q) + '”.</b></div>'; return; }
+  var order = (EVENT.tierOrder || []).slice();
+  list.forEach(function(x){ var t = x.tier || 'Other'; if (order.indexOf(t) < 0) order.push(t); });
+  $('#venList').innerHTML = order.map(function(tier){
+    var arr = list.filter(function(x){ return (x.tier || 'Other') === tier; }); if (!arr.length) return '';
+    return '<div class="tier"><div class="tier-h"><h3>' + esc(tier) + '</h3></div><div class="ven-grid">' + arr.map(function(x){
+      var lg = x.logo_url ? '<img src="' + esc(x.logo_url) + '" alt="">' : esc(initials(x.name));
+      var name = x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.name) + '</a>' : esc(x.name);
+      return '<div class="ven glass"><div class="lg" style="background:linear-gradient(140deg,' + ['var(--brand-2),var(--brand)','var(--hot),var(--brand)','var(--brand-3),var(--brand)','#0ea5a4,var(--brand-2)'][hashN(x.name, 4)] + ')">' + lg + '</div><div>' +
+        (x.category ? '<span class="cat">' + esc(x.category) + '</span>' : '') + '<b>' + name + '</b>' + (x.description ? '<p>' + ph(x.description) + '</p>' : '') +
+        (x.booth ? '<span class="booth">' + esc(x.booth) + '</span>' : '') + '</div></div>';
+    }).join('') + '</div></div>';
+  }).join('') + (EVENT.vendorsFooterHTML ? '<div class="card glass small">' + EVENT.vendorsFooterHTML + '</div>' : '');
+}
+
+/* ---------- VENUE ---------- */
+function renderVenue(){
+  var V = EVENT.venue || {};
+  var maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(V.mapsQuery || (EVENT.venueName + ' ' + V.address));
+  var left = '<div class="stack">' +
+    '<div class="card glass"><div class="eyebrow">Where</div><h3 style="font-size:1.2rem;margin:.2rem 0 .3rem">' + esc(EVENT.venueName) + '</h3>' +
+      '<p style="white-space:pre-line">' + esc(V.address || '') + '</p><div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem"><a class="btn" href="' + maps + '" target="_blank" rel="noopener">' + ICON.pin.replace('<svg', '<svg width="16" height="16"') + ' Open in Google Maps</a>' +
+      (V.phone ? '<a class="btn ghost" href="tel:' + esc(V.phone.replace(/[^\d+]/g, '')) + '">Call ' + esc(V.phone) + '</a>' : '') + '</div>' +
+      (V.noteHTML ? '<div class="warn" style="margin:1rem 0 0">' + V.noteHTML + '</div>' : '') + '</div>' +
+    '<div class="card glass"><div class="h-card">Rooms</div><ul class="rooms">' + (V.rooms || []).map(function(r){
+      return '<li><div><b>' + esc(r.name) + '</b><small>' + esc(r.use || '') + '</small></div><span class="lvl">' + esc(r.level || '') + '</span></li>'; }).join('') + '</ul></div>' +
+    '<div class="card glass"><div class="h-card">Floor Plan</div><div class="floorplan">' + (V.floorPlanUrl ? '<img src="' + esc(V.floorPlanUrl) + '" alt="Floor plan">' : '<div><b>Floor plan image goes here</b><br>Set <code>EVENT.venue.floorPlanUrl</code> to a PNG/JPG of the hotel map.</div>') + '</div></div>' +
+  '</div>';
+  var right = '<div class="stack">' +
+    (V.wifi ? '<div class="card glass"><div class="h-card">Wi-Fi</div><div class="wifi"><div><small class="muted">Network</small><br><code>' + esc(V.wifi.network) + '</code></div></div>' +
+      '<div class="wifi"><div><small class="muted">Password</small><br><code>' + esc(V.wifi.password) + '</code></div><button class="copybtn" data-act="copy" data-text="' + esc(V.wifi.password) + '">Copy</button></div></div>' : '') +
+    (V.regHours ? '<div class="card glass"><div class="h-card">Registration Desk</div>' + (V.regLocation ? '<p class="small muted" style="margin:-.3rem 0 .6rem;font-weight:600">' + esc(V.regLocation) + '</p>' : '') + '<dl class="kv">' + V.regHours.map(function(r){ return '<dt>' + esc(r[0]) + '</dt><dd>' + ph(r[1]) + '</dd>'; }).join('') + '</dl></div>' : '') +
+    (V.parking ? '<div class="card glass"><div class="h-card">Parking &amp; Getting Here</div>' + V.parking.map(function(p){ return '<p class="small" style="margin-bottom:.5rem">' + ph(p) + '</p>'; }).join('') + '</div>' : '') +
+    (V.hotelHTML ? '<div class="card glass"><div class="h-card">Hotel</div><div class="small">' + V.hotelHTML + '</div></div>' : '') +
+  '</div>';
+  $('#venueWrap').innerHTML = left + right;
+}
+
+/* ---------- UPDATES ---------- */
+function renderUpdates(){
+  var list = visibleUpdates();
+  var seenKey = (EVENT.id || 'event') + ':seenUpd', seen = +store.get(seenKey) || 0;
+  var unseen = list.filter(function(u){ return u._ts > seen; }).length, c = $('#updCount');
+  c.hidden = !unseen || S.tab === 'updates'; c.textContent = unseen;
+  var src = S.src.updates === 'sheet';
+  $('#updList').innerHTML = (list.length ? list.map(updRow).join('') : '<p class="muted small">No updates yet. Check back soon.</p>') +
+    '<div class="srcnote"><span class="dot ' + (src ? '' : 'off') + '"></span>' + (src ? 'Live from the organizer’s sheet' : 'Showing built-in updates') +
+    (S.lastSync ? ' · checked ' + fmt(S.lastSync, { hour: 'numeric', minute: '2-digit' }) : '') + ' · <button class="linkbtn" data-act="refresh">Refresh</button></div>';
+}
+function markUpdatesSeen(){ var l = visibleUpdates(); if (l.length) store.set((EVENT.id || 'event') + ':seenUpd', String(l[0]._ts)); $('#updCount').hidden = true; }
+
+/* ---------- INFO ---------- */
+function renderInfo(){
+  var I = EVENT.info || {}, html = '';
+  if (I.faq && I.faq.length) html += '<div class="card glass faq">' + I.faq.map(function(f, i){ return '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(f.q) + '</summary><div class="ans">' + f.a + '</div></details>'; }).join('') + '</div>';
+  if (I.contacts && I.contacts.length) html += '<div class="card glass"><div class="h-card">Contacts</div><div class="contacts">' + I.contacts.map(function(c){
+    var href = c.phone ? 'tel:' + c.phone.replace(/[^\d+]/g, '') : (c.url || '#');
+    return '<a class="contact" href="' + esc(href) + '"' + (c.url ? ' target="_blank" rel="noopener"' : '') + '><div><b>' + ph(c.name) + '</b><small>' + esc(c.role) + '</small></div><span>' + esc(c.phone || c.linkText || 'Open') + '</span></a>';
+  }).join('') + '</div>' + (I.contactsNote ? '<p class="note">' + I.contactsNote + '</p>' : '') + '</div>';
+  if (I.extraHTML) html += I.extraHTML;
+  $('#infoWrap').innerHTML = html;
+}
+
+/* ---------- chrome ---------- */
+function renderChrome(){
+  $('#brandName').textContent = EVENT.shortName || EVENT.name;
+  $('#brandSub').textContent = EVENT.brandSub || '';
+  paintLogo($('#brandLogo'));
+  var vt = EVENT.vendorsTabLabel || 'Exhibitors';
+  $('#vendorsTabBtn').textContent = vt;
+  $('#vendorsTitle').textContent = EVENT.vendorsTitle || 'Exhibitors & Sponsors';
+  $('#vendorsIntro').innerHTML = EVENT.vendorsIntroHTML || '';
+  $('#vendorsIntro').style.display = EVENT.vendorsIntroHTML ? '' : 'none';
+  $('#footer').innerHTML = EVENT.footerHTML || '';
+}
+function renderClockPill(){
+  var p = $('#clockPill');
+  if (!DEMO_CLOCK.presets || !DEMO_CLOCK.presets.length) { p.style.display = 'none'; return; }
+  var d = now();
+  p.className = 'clockpill' + (S.demo ? '' : ' live');
+  p.innerHTML = '<i></i><span class="lbl">' + (S.demo ? 'Demo · ' : 'Live · ') + '</span>' + esc(fmtClock(d));
+  p.setAttribute('aria-label', (S.demo ? 'Demo clock: ' : 'Real time: ') + fmtClock(d) + '. Change time');
+}
+function renderClockMenu(){
+  var m = $('#clockMenu');
+  m.innerHTML = '<h4>Demo clock · jump to</h4>' + DEMO_CLOCK.presets.map(function(p, i){
+    return '<button role="menuitem" data-act="preset" data-i="' + i + '" class="' + (S.presetIdx === i ? 'on' : '') + '">' + esc(p.label) + '<small>' + esc(fmt(new Date(Date.parse(p.iso)), { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</small></button>';
+  }).join('') + '<button role="menuitem" data-act="preset" data-i="-1" class="' + (S.presetIdx < 0 ? 'on' : '') + '">Real time<small>device clock</small></button>';
+}
+function toggleClockMenu(force){
+  var m = $('#clockMenu'), open = force != null ? force : m.hidden;
+  if (open) renderClockMenu();
+  m.hidden = !open; $('#clockPill').setAttribute('aria-expanded', open);
+}
+function renderTimeBound(){ renderNowNext(); renderHomeUpdates(); renderClockPill(); tickCountdown(); }
+function renderAll(){
+  renderChrome(); renderHero(); renderNowNext(); renderFeatures(); renderHomeUpdates();
+  renderSchedule(); renderAgenda(); renderSpeakers(); renderVendors(); renderVenue(); renderUpdates(); renderInfo(); renderClockPill();
+}
+
+/* ---------- tabs ---------- */
+var TABS = ['home','schedule','agenda','speakers','vendors','venue','updates','info'];
+function showTab(id){
+  if (TABS.indexOf(id) < 0) id = 'home';
+  S.tab = id;
+  $$('.view').forEach(function(v){ v.classList.toggle('active', v.id === 'view-' + id); });
+  $$('#tabs button').forEach(function(b){ var on = b.dataset.tab === id; b.classList.toggle('active', on); if (on) { b.setAttribute('aria-current', 'page'); b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } else b.removeAttribute('aria-current'); });
+  try { history.replaceState(null, '', location.pathname + location.search + '#' + id); } catch(e) {}
+  if (id === 'updates') markUpdatesSeen();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', function(e){
+  var el = e.target.closest('[data-act]');
+  if (!e.target.closest('#clockMenu') && !e.target.closest('#clockPill')) toggleClockMenu(false);
+  if (!el) return;
+  var a = el.dataset.act;
+  if (a === 'tab') showTab(el.dataset.tab);
+  else if (a === 'day') { S.day = el.dataset.day; renderSchedule(); }
+  else if (a === 'track') { S.track = el.dataset.track; renderSchedule(); }
+  else if (a === 'toggle') { var id = el.dataset.id; S.open[id] = !S.open[id]; var card = document.getElementById('sess-' + id); if (card) { card.classList.toggle('open', S.open[id]); el.setAttribute('aria-expanded', S.open[id]); } }
+  else if (a === 'star') { e.stopPropagation(); toggleStar(el.dataset.id); }
+  else if (a === 'goto') goToSession(el.dataset.day, el.dataset.id);
+  else if (a === 'speaker') openSpeaker(el.dataset.id);
+  else if (a === 'closesheet') closeSheet();
+  else if (a === 'refresh') loadAll(true);
+  else if (a === 'clockmenu') toggleClockMenu();
+  else if (a === 'preset') { setPreset(+el.dataset.i); toggleClockMenu(false); S.day = currentDay() || S.day; renderAll(); toast(S.demo ? 'Demo clock: ' + fmtClock(now()) : 'Using real time'); }
+  else if (a === 'copy') {
+    var txt = el.dataset.text;
+    var done = function(){ toast('Copied'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, function(){ toast(txt); });
+    else toast(txt);
+  }
+});
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { closeSheet(); toggleClockMenu(false); } });
+$('#spkSearch').addEventListener('input', renderSpeakers);
+$('#venSearch').addEventListener('input', renderVendors);
+window.addEventListener('hashchange', function(){ showTab(location.hash.slice(1)); });
+
+/* ---------- boot ---------- */
+S.storageOK = testStorage();
+loadAgenda();
+initClock();
+normalize();
+loadAll(false).then(function(){ showTab(location.hash.slice(1) || 'home'); });
+loadWeather();
+setInterval(tickCountdown, 1000);
+setInterval(renderClockPill, 15000);
+setInterval(function(){ renderTimeBound(); renderUpdates(); if (S.tab === 'schedule') renderSchedule(); }, 60000);
+if (['UPDATES','SESSIONS','SPEAKERS','EXHIBITORS'].some(function(k){ return SHEETS[k] && !/PASTE|YOUR_/.test(SHEETS[k]); })) setInterval(function(){ loadAll(false); }, (EVENT.refreshSeconds || 120) * 1000);
+setInterval(loadWeather, 20 * 60000);
+window.CONVENTION_APP = { state: S, goToSession: goToSession, parseCSV: parseCSV, csvToObjects: csvToObjects };
+})();
+</script>
+</body>
+</html>
