@@ -222,7 +222,7 @@ main{max-width:1080px;margin:0 auto;padding:1rem var(--pad) 3rem}
 .star{position:absolute;top:.55rem;right:.5rem;width:2.3rem;height:2.3rem;display:grid;place-items:center;border-radius:50%;color:var(--ink-2)}
 .star svg{width:1.25rem;height:1.25rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
 .star[aria-pressed="true"]{color:var(--brand-3)}
-.star[aria-pressed="true"] svg{fill:currentColor;stroke:color-mix(in srgb,var(--brand-3) 70%,#7a4a00)}
+.star[aria-pressed="true"] svg{fill:currentColor;stroke:color-mix(in srgb,var(--brand-3) 55%,var(--ink))}
 .star:hover{background:rgba(14,27,61,.06)}
 .sess-more{display:none;padding:0 .95rem .95rem 6.05rem;font-size:.84rem}
 .subtabs.days .sl{display:none}
@@ -327,8 +327,8 @@ main{max-width:1080px;margin:0 auto;padding:1rem var(--pad) 3rem}
   .appbar svg{width:1.2rem;height:1.2rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .appbar .ic{position:relative;line-height:0}
   .appbar .count{position:absolute;top:-.3rem;left:calc(100% - .35rem);min-width:.9rem;padding:0 .22rem;border-radius:999px;background:var(--hot);color:#fff;font-size:.5rem;line-height:.9rem;text-align:center}
-  main{padding-bottom:calc(5.2rem + env(safe-area-inset-bottom))}
-  footer{padding-bottom:calc(5rem + env(safe-area-inset-bottom))}
+  main{padding-bottom:1.5rem}
+  body footer{padding-bottom:calc(5.6rem + env(safe-area-inset-bottom))}
   .toast{bottom:calc(4.4rem + env(safe-area-inset-bottom))}
 }
 .morelist{display:grid;gap:.5rem}
@@ -356,6 +356,11 @@ main{max-width:1080px;margin:0 auto;padding:1rem var(--pad) 3rem}
 .toast.show{visibility:visible;transform:translate(-50%,0)}
 footer{max-width:1080px;margin:0 auto;padding:0 var(--pad) 2.5rem;font-size:.7rem;color:var(--ink-2);text-align:center}
 footer p+p{margin-top:.3rem}
+.zavella{display:flex;justify-content:center;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.zavella a{display:inline-flex;align-items:center;gap:.45rem;text-decoration:none;color:var(--ink-2);font-size:.64rem;font-weight:600;letter-spacing:.02em;padding:.3rem .5rem;border-radius:10px}
+.zavella a:hover{background:rgba(15,23,42,.05)}
+.zavella .zv-mk{width:1.25rem;height:1.25rem;flex:none}
+.zavella .zv-wm{height:.85rem;width:auto;display:block}
 </style>
 </head>
 <body>
@@ -1808,7 +1813,7 @@ function normalize(){
   S.sessions = S.sessions.map(function(s){
     var sm = parseClock(s.start); if (sm == null) return null;
     if (sm < roll) sm += 1440;
-    var em = parseClock(s.end);
+    var em = parseClock(s.end); s._noEnd = em == null;
     if (em == null) em = sm + 60;
     else { if (em < roll) em += 1440; if (em <= sm) em += 1440; }
     var base = dayBase(s.day); if (isNaN(base)) return null;
@@ -1844,7 +1849,7 @@ function sessById(id){ for (var i = 0; i < S.sessions.length; i++) if (S.session
 function visibleUpdates(){ var t = now().getTime(); return S.updates.filter(function(u){ return !S.demo || !u._ts || u._ts <= t; }); }
 
 /* ---------- rendering helpers ---------- */
-function initials(n){ return String(n || '?').replace(/\(.*?\)/g, '').replace(/[^A-Za-z0-9\s\u00C0-\u024F]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map(function(w){ return w.charAt(0); }).join('').toUpperCase(); }
+function initials(n){ return String(n || '?').replace(/\(.*?\)/g, '').replace(/[^A-Za-z0-9\s\u00C0-\u024F]/g, '').split(/\s+/).filter(function(w){ return /^[A-Za-z\u00C0-\u024F]/.test(w); }).slice(0, 2).map(function(w){ return w.charAt(0); }).join('').toUpperCase(); }
 function hashN(s, n){ var h = 0; s = String(s); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h) % n; }
 function avatar(p, cls){
   if (p.photo_url) return '<img class="av ' + (cls || '') + '" src="' + esc(p.photo_url) + '" alt="" loading="lazy">';
@@ -1908,7 +1913,7 @@ function tickCountdown(){
 function miniRow(s, whenTxt){
   var t = trk(s._track);
   return '<button class="mini" style="--tc:' + esc(t.color) + '" data-act="goto" data-day="' + esc(s.day) + '" data-id="' + esc(s.id) + '">' +
-    '<span class="bar"></span><span><b>' + esc(s.title) + '</b><small>' + (whenTxt ? '<span class="when">' + esc(whenTxt) + '</span> · ' : '') + esc(fmtMin(s._sm) + '–' + fmtMin(s._em) + ' · ' + (s.room || '')) + (s._spk.length ? ' · ' + esc(s._spk.map(function(p){ return p.name; }).join(', ')) : '') + '</small></span></button>';
+    '<span class="bar"></span><span><b>' + esc(s.title) + '</b><small>' + (whenTxt ? '<span class="when">' + esc(whenTxt) + '</span> · ' : '') + esc(fmtMin(s._sm) + (s._noEnd ? '' : '–' + fmtMin(s._em)) + ' · ' + (s.room || '')) + (s._spk.length ? ' · ' + esc(s._spk.map(function(p){ return p.name; }).join(', ')) : '') + '</small></span></button>';
 }
 function renderNowNext(){
   var t = now().getTime(), el = $('#nowNext');
@@ -1993,7 +1998,7 @@ function sessionCard(s, opts){
   var mainAct = opts.agenda ? 'data-act="goto" data-day="' + esc(s.day) + '" data-id="' + esc(s.id) + '"' : 'data-act="toggle" data-id="' + esc(s.id) + '" aria-expanded="' + open + '"';
   var h = '<article class="sess glass' + (open ? ' open' : '') + (isPast ? ' past' : '') + (opts.conflict ? ' conflict' : '') + '" id="' + (opts.agenda ? 'ag-' : 'sess-') + esc(s.id) + '" style="--tc:' + esc(t.color) + '">' +
     '<button class="sess-main" ' + mainAct + '>' +
-      '<div class="sess-time">' + fmtMin(s._sm) + '<span>– ' + fmtMin(s._em) + '</span></div>' +
+      '<div class="sess-time">' + fmtMin(s._sm) + (s._noEnd ? '' : '<span>– ' + fmtMin(s._em) + '</span>') + '</div>' +
       '<div class="sess-body"><div class="sess-track"><span class="tn">' + esc(t.name) + '</span>' + (s.room ? '<span>' + esc(s.room) + '</span>' : '') +
         (isLive ? '<span class="livetag">LIVE</span>' : '') + (opts.conflict ? '<span class="conflicttag">OVERLAP</span>' : '') + '</div>' +
         '<h3>' + esc(s.title) + '</h3>' + (s._spk.length ? '<div class="sess-spk">' + esc(spkLine(s)) + '</div>' : '') + '</div>' +
@@ -2105,7 +2110,7 @@ function renderVendors(){
     return '<div class="tier"><div class="tier-h"><h3>' + esc(tier) + '</h3></div><div class="ven-grid">' + arr.map(function(x){
       var lg = x.logo_url ? '<img src="' + esc(x.logo_url) + '" alt="">' : esc(initials(x.name));
       var name = x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.name) + '</a>' : esc(x.name);
-      return '<div class="ven glass"><div class="lg" style="background:linear-gradient(140deg,' + ['var(--brand-2),var(--brand)','var(--hot),var(--brand)','var(--brand-3),var(--brand)','#0ea5a4,var(--brand-2)'][hashN(x.name, 4)] + ')">' + lg + '</div><div>' +
+      return '<div class="ven glass"><div class="lg" style="background:linear-gradient(140deg,' + ['var(--brand-2),var(--brand)','var(--brand-3),var(--brand)','var(--brand),var(--hero-a)','var(--hero-c),var(--brand-2)'][hashN(x.name, 4)] + ')">' + lg + '</div><div>' +
         (x.category ? '<span class="cat">' + esc(x.category) + '</span>' : '') + '<b>' + name + '</b>' + (x.description ? '<p>' + ph(x.description) + '</p>' : '') +
         (x.booth ? '<span class="booth">' + esc(x.booth) + '</span>' : '') + '</div></div>';
     }).join('') + '</div></div>';
@@ -2170,7 +2175,8 @@ function renderChrome(){
   $('#vendorsTitle').textContent = EVENT.vendorsTitle || 'Exhibitors & Sponsors';
   $('#vendorsIntro').innerHTML = EVENT.vendorsIntroHTML || '';
   $('#vendorsIntro').style.display = EVENT.vendorsIntroHTML ? '' : 'none';
-  $('#footer').innerHTML = EVENT.footerHTML || '';
+  $('#footer').innerHTML = (EVENT.footerHTML || '') + (EVENT.hidePoweredBy ? '' :
+    '<div class="zavella"><a href="https://zavella.app" target="_blank" rel="noopener" aria-label="Powered by Zavella (opens zavella.app)"><span>Powered by</span><svg class="zv-mk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 C86 4 96 14 96 50 C96 86 86 96 50 96 C14 96 4 86 4 50 C4 14 14 4 50 4 Z" fill="#2C3566"/><path fill="#F8FAFD" transform="translate(23.670 74) scale(0.038 -0.038)" d="M40 0V34L570 844H100V1080H990V1046L462 236H970V0Z"/><circle cx="76" cy="67" r="9.5" fill="#C39AD2"/></svg><svg class="zv-wm" xmlns="http://www.w3.org/2000/svg" viewBox="0 -2000 6901 2040" aria-hidden="true"><g fill="#1B2033"><path transform="translate(0 0) scale(1 -1)" d="M40 0V33.33L611.67 868.66H97.99V1080H987.33V1046L417.32 211.33H962.66V0Z"/><path transform="translate(987 0) scale(1 -1)" d="M442.33 -30Q324.66 -30 243.75 14.41Q162.83 58.83 121.41 132.91Q80 206.99 80 295.99Q80 374.33 106.08 436.41Q132.16 498.50 186.25 544.08Q240.33 589.66 325.66 618.99Q391.33 640.49 478.41 657.08Q565.50 673.66 668.16 688.24Q770.83 702.83 883.33 719.66L796.66 671.33Q797.50 783.16 746.75 836.25Q696.00 889.33 574.66 889.33Q501.99 889.33 434.08 855.08Q366.16 820.83 338.99 738.33L118.66 807.33Q158.83 944.00 271.58 1027.00Q384.33 1110 575.33 1110Q719.49 1110 828.66 1063.16Q937.83 1016.33 991.33 908.99Q1020.33 852.33 1026.33 792.83Q1032.33 733.33 1032.33 662.66V0H821.00V234.33L856.00 195.66Q783.00 79.16 685.41 24.58Q587.83 -30 442.33 -30ZM489.99 162.33Q571.99 162.33 629.83 191.41Q687.66 220.49 722.33 262.08Q757.00 303.66 768.66 341.33Q787.50 387.33 790.41 446.75Q793.33 506.16 793.33 543.33L867.33 521.00Q757.66 503.50 679.58 490.83Q601.50 478.16 545.83 466.75Q490.16 455.33 446.99 441.00Q405.49 425.66 376.41 405.91Q347.33 386.16 331.83 360.00Q316.32 333.83 316.32 298.99Q316.32 259.49 336.07 228.58Q355.83 197.66 394.41 179.99Q432.99 162.33 489.99 162.33Z"/><path transform="translate(2059 0) scale(1 -1)" d="M432 0 40 1080H281.32L552.99 296.99L824.33 1080H1065.99L673.99 0Z"/><path transform="translate(3085 0) scale(1 -1)" d="M630.66 -30Q466.83 -30 342.99 41.08Q219.16 112.16 149.58 238.08Q80 364 80 528.33Q80 705.33 148.24 835.83Q216.49 966.33 337.41 1038.16Q458.33 1110 617.33 1110Q784.83 1110 902.33 1031.66Q1019.83 953.33 1077.08 810.33Q1134.33 667.33 1120.16 472.66H881.00V560.66Q880.00 737.00 819.00 818.16Q758.00 899.33 627.33 899.33Q479.49 899.33 407.24 807.66Q334.99 716.00 334.99 540Q334.99 375.66 407.24 285.66Q479.49 195.66 617.33 195.66Q706.33 195.66 770.66 235.33Q835.00 274.99 870.00 349.66L1108.33 277.99Q1046.49 131.66 916.74 50.83Q786.99 -30 630.66 -30ZM258.99 472.66V654.99H1002.33V472.66Z"/><path transform="translate(5369 0) scale(1 -1)" d="M442.33 -30Q324.66 -30 243.75 14.41Q162.83 58.83 121.41 132.91Q80 206.99 80 295.99Q80 374.33 106.08 436.41Q132.16 498.50 186.25 544.08Q240.33 589.66 325.66 618.99Q391.33 640.49 478.41 657.08Q565.50 673.66 668.16 688.24Q770.83 702.83 883.33 719.66L796.66 671.33Q797.50 783.16 746.75 836.25Q696.00 889.33 574.66 889.33Q501.99 889.33 434.08 855.08Q366.16 820.83 338.99 738.33L118.66 807.33Q158.83 944.00 271.58 1027.00Q384.33 1110 575.33 1110Q719.49 1110 828.66 1063.16Q937.83 1016.33 991.33 908.99Q1020.33 852.33 1026.33 792.83Q1032.33 733.33 1032.33 662.66V0H821.00V234.33L856.00 195.66Q783.00 79.16 685.41 24.58Q587.83 -30 442.33 -30ZM489.99 162.33Q571.99 162.33 629.83 191.41Q687.66 220.49 722.33 262.08Q757.00 303.66 768.66 341.33Q787.50 387.33 790.41 446.75Q793.33 506.16 793.33 543.33L867.33 521.00Q757.66 503.50 679.58 490.83Q601.50 478.16 545.83 466.75Q490.16 455.33 446.99 441.00Q405.49 425.66 376.41 405.91Q347.33 386.16 331.83 360.00Q316.32 333.83 316.32 298.99Q316.32 259.49 336.07 228.58Q355.83 197.66 394.41 179.99Q432.99 162.33 489.99 162.33Z"/></g><rect x="4299" y="-2000" width="400" height="2000" rx="140" fill="#2C3566"/><rect x="4879" y="-2000" width="400" height="2000" rx="140" fill="#AEB9E6"/><circle cx="6731" cy="-170" r="170" fill="#B485C6"/></svg></a></div>');
 }
 function renderClockPill(){
   var p = $('#clockPill');
